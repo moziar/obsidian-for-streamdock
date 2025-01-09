@@ -10,6 +10,10 @@
     "Name": "Open Note",
     "Tooltip": "Open specific Obsidian Note"
   },
+  "com.moz.obsidian-for-streamdock.run-command": {
+    "Name": "Run Command",
+    "Tooltip": "Run specific Obsidian Command"
+  },
   "Localization": {
     "URL": "URL",
     "Method": "Method",

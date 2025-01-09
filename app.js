@@ -1,8 +1,9 @@
 $SD.on('connected', (jsonObj) => connected(jsonObj));
 
 function connected(jsn) {
-    $SD.on('com.moz.obsidian-for-streamdock.daily-note.keyDown', (jsonObj) => dailyNote(jsonObj));
+    $SD.on('com.moz.obsidian-for-streamdock.run-command.keyDown', (jsonObj) => runCommand(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.open-note.keyDown', (jsonObj) => openNote(jsonObj));
+    $SD.on('com.moz.obsidian-for-streamdock.daily-note.keyDown', (jsonObj) => dailyNote(jsonObj));
 };
 
 /**
@@ -19,9 +20,42 @@ function connected(jsn) {
 *   },
 * }} data
 */
+function runCommand(data) {
+   const defaultSettings = {
+       url: `http://127.0.0.1:27123/commands/${data.payload.settings.command || ''}`,
+       method: 'POST',
+       contentType: 'application/json',
+       headers: `Authorization: Bearer ${data.payload.settings.apikey || ''}`,
+       body: '',
+   };
+
+   const newData = {
+       context: data.context,
+       payload: {
+           settings: { ...defaultSettings, ...data.payload.settings },
+       },
+   };
+
+   sendHttp(newData);
+}
+
+/**
+ * @param {{
+*   context: string,
+*   payload: {
+*     settings: {
+*       url?: string,
+*       method?: string,
+*       contentType?: string|null,
+*       headers?: string|null,
+*       body?: string|null,
+*     }
+*   },
+* }} data
+*/
 function openNote(data) {
-   const notepath = data.payload.settings.notepath || '';
-   const encodedNotepath = encodeURIComponent(notepath);
+   const notePath = data.payload.settings.notepath || '';
+   const encodedNotepath = encodeURIComponent(notePath);
    const defaultSettings = {
        url: `http://127.0.0.1:27123/open/${encodedNotepath}?newLeaf=true`,
        method: 'POST',

@@ -27,6 +27,20 @@
           "Image": "images/open-note"
         }
       ]
+    },
+    {
+      "UUID": "com.moz.obsidian-for-streamdock.run-command",
+      "Name": "Run Command",
+      "Tooltip": "运行 Obsidian 中的命令",
+      "PropertyInspectorPath": "propertyInspector/run-command.html",
+      "Icon": "images/run-command_action",
+      "States": [
+        {
+          "FontSize": "11",
+          "Title": "Command",
+          "Image": "images/run-command"
+        }
+      ]
     }
   ],
   "SDKVersion": 2,
