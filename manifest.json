@@ -1,0 +1,56 @@
+{
+  "Actions": [
+    {
+      "UUID": "com.moz.obsidian-for-streamdock.daily-note",
+      "Name": "Daily Note",
+      "Tooltip": "打开 Obsidian Daily Note",
+      "PropertyInspectorPath": "propertyInspector/daily-note.html",
+      "Icon": "images/daily-note_action",
+      "States": [
+        {
+          "FontSize": "11",
+          "Title": "Daily Note",
+          "Image": "images/daily-note"
+        }
+      ]
+    },
+    {
+      "UUID": "com.moz.obsidian-for-streamdock.open-note",
+      "Name": "Open Note",
+      "Tooltip": "打开笔记",
+      "PropertyInspectorPath": "propertyInspector/open-note.html",
+      "Icon": "images/open-note_action",
+      "States": [
+        {
+          "FontSize": "11",
+          "Title": "Open Note",
+          "Image": "images/open-note"
+        }
+      ]
+    }
+  ],
+  "SDKVersion": 2,
+  "Author": "Moz",
+  "CodePath": "index.html",
+  "Name": "enObsidian",
+  "Description": "在 StreamDock 中提供对 Obsidian 的支持",
+  "Icon": "images/plugin",
+  "Category": "enObsidian",
+  "CategoryIcon": "images/category",
+  "URL": "https://github.com/moziar/obsidian-for-streamdock",
+  "Version": "0.1.0",
+  "OS": [
+    {
+        "Platform": "mac",
+        "MinimumVersion" : "10.11"
+    },
+    {
+        "Platform": "windows",
+        "MinimumVersion" : "10"
+    }
+  ],
+  "Software":
+    {
+        "MinimumVersion" : "4.2"
+    }
+}

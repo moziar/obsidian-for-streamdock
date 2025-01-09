@@ -1,0 +1,21 @@
+{
+  "Name": "enObsidian",
+  "Description": "StreamDeck Plugin for Obsidian",
+  "Category": "enObsidian",
+  "com.moz.obsidian-for-streamdock.daily-note": {
+    "Name": "Daily Note",
+    "Tooltip": "Open Obsidian Daily Note"
+  },
+  "com.moz.obsidian-for-streamdock.open-note": {
+    "Name": "Open Note",
+    "Tooltip": "Open specific Obsidian Note"
+  },
+  "Localization": {
+    "URL": "URL",
+    "Method": "Method",
+    "ContentType": "Content Type",
+    "Headers": "Headers",
+    "Message": "Message",
+    "Body": "Body"
+  }
+}
