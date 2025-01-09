@@ -14,7 +14,7 @@ function connected(jsn) {
 *       url?: string,
 *       method?: string,
 *       contentType?: string|null,
-*       headers?: string|null,
+*       apikey?: string|null,
 *       body?: string|null,
 *     }
 *   },
@@ -23,10 +23,6 @@ function connected(jsn) {
 function runCommand(data) {
    const defaultSettings = {
        url: `http://127.0.0.1:27123/commands/${data.payload.settings.command || ''}`,
-       method: 'POST',
-       contentType: 'application/json',
-       headers: `Authorization: Bearer ${data.payload.settings.apikey || ''}`,
-       body: '',
    };
 
    const newData = {
@@ -47,7 +43,7 @@ function runCommand(data) {
 *       url?: string,
 *       method?: string,
 *       contentType?: string|null,
-*       headers?: string|null,
+*       apikey?: string|null,
 *       body?: string|null,
 *     }
 *   },
@@ -58,10 +54,6 @@ function openNote(data) {
    const encodedNotepath = encodeURIComponent(notePath);
    const defaultSettings = {
        url: `http://127.0.0.1:27123/open/${encodedNotepath}?newLeaf=true`,
-       method: 'POST',
-       contentType: 'application/json',
-       headers: `Authorization: Bearer ${data.payload.settings.apikey || ''}`,
-       body: '',
    };
 
    const newData = {
@@ -82,7 +74,7 @@ function openNote(data) {
  *       url?: string,
  *       method?: string,
  *       contentType?: string|null,
- *       headers?: string|null,
+ *       apikey?: string|null,
  *       body?: string|null,
  *     }
  *   },
@@ -91,10 +83,6 @@ function openNote(data) {
 function dailyNote(data) {
     const defaultSettings = {
         url: 'http://127.0.0.1:27123/commands/daily-notes/',
-        method: 'POST',
-        contentType: 'application/json',
-        headers: `Authorization: Bearer ${data.payload.settings.apikey || ''}`,
-        body: '',
     };
 
     const newData = {
@@ -115,14 +103,19 @@ function dailyNote(data) {
  *       url?: string,
  *       method?: string,
  *       contentType?: string|null,
- *       headers?: string|null,
+ *       apikey?: string|null,
  *       body?: string|null,
  *     }
  *   },
  * }} data
  */
 function sendHttp(data) {
-    const { url, method, contentType, headers, body } = data.payload.settings;
+    const url = data.payload.settings.url;
+    const method = 'POST';
+    const contentType = 'application/json';
+    const headers = `Authorization: Bearer ${data.payload.settings.apikey || ''}`;
+    const body = '';
+    
     log('sendHttp', { url, method, contentType, headers, body });
 
     let defaultHeaders = contentType ? {
