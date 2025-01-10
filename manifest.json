@@ -52,7 +52,7 @@
   "Category": "enObsidian",
   "CategoryIcon": "images/category",
   "URL": "https://github.com/moziar/obsidian-for-streamdock",
-  "Version": "0.1.0",
+  "Version": "1.0.0",
   "OS": [
     {
         "Platform": "mac",
