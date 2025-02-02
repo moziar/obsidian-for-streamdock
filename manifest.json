@@ -29,6 +29,20 @@
       ]
     },
     {
+      "UUID": "com.moz.obsidian-for-streamdock.web-viewer",
+      "Name": "Web Viewer",
+      "Tooltip": "打开 Obsidian Web Viewer",
+      "PropertyInspectorPath": "propertyInspector/web-viewer.html",
+      "Icon": "images/web-viewer_action",
+      "States": [
+        {
+          "FontSize": "11",
+          "Title": "Web",
+          "Image": "images/web-viewer"
+        }
+      ]
+    }
+    {
       "UUID": "com.moz.obsidian-for-streamdock.run-command",
       "Name": "Run Command",
       "Tooltip": "运行 Obsidian 中的命令",

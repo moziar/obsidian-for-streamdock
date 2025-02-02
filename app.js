@@ -4,6 +4,7 @@ function connected(jsn) {
     $SD.on('com.moz.obsidian-for-streamdock.run-command.keyDown', (jsonObj) => runCommand(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.open-note.keyDown', (jsonObj) => openNote(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.daily-note.keyDown', (jsonObj) => dailyNote(jsonObj));
+    $SD.on('com.moz.obsidian-for-streamdock.web-viewer.keyDown', (jsonObj) => webViewer(jsonObj));
 };
 
 /**
@@ -83,6 +84,21 @@ function openNote(data) {
 function dailyNote(data) {
     const defaultSettings = {
         url: 'http://127.0.0.1:27123/commands/daily-notes/',
+    };
+
+    const newData = {
+        context: data.context,
+        payload: {
+            settings: { ...defaultSettings, ...data.payload.settings },
+        },
+    };
+
+    sendHttp(newData);
+}
+
+function webViewer(data) {
+    const defaultSettings = {
+        url: 'http://127.0.0.1:27123/commands/webviewer:open/',
     };
 
     const newData = {

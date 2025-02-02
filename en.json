@@ -14,6 +14,10 @@
     "Name": "Run Command",
     "Tooltip": "Run specific Obsidian Command"
   },
+  "com.moz.obsidian-for-streamdock.web-viewer": {
+    "Name": "Web Viewer",
+    "Tooltip": "Open Web Viewer"
+  },
   "Localization": {
     "URL": "URL",
     "Method": "Method",
