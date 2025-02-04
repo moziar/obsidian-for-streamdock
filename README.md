@@ -15,13 +15,13 @@ This is a Stream Dock plugin which could help you open Daily Note, open Note or 
 
 1. Install the local-REST-API on Obsidian
 2. Download the `.zip` file from the [release](https://github.com/moziar/obsidian-for-streamdock/releases) page
-3. Unzip the file, and copy it to your Stream Dock plugin folder
+3. Unzip the file, 和 copy it to your Stream Dock plugin folder
 
 
 
 ## Usage
 
-> **Tip**
+> [!TIP]
 >
 > You could get the API Key from local-REST-API setting page
 
