@@ -2,7 +2,16 @@ This is a Stream Dock plugin which could help you open Daily Note, open Note or 
 
 
 
-## Install
+## Installation
+
+### 1. Download from MiraBox Space
+
+1. Install the local-REST-API on Obsidian
+1. Download obsidian-for-streamdock dircetly from [ MiraBox Space](https://space.key123.vip/product?id=20250121000509)
+
+
+
+### 2. Manual Installation
 
 1. Install the local-REST-API on Obsidian
 2. Download the `.zip` file from the [release](https://github.com/moziar/obsidian-for-streamdock/releases) page
@@ -34,14 +43,14 @@ This is a Stream Dock plugin which could help you open Daily Note, open Note or 
 ### Open Obsidian Web Viewer
 
 1. Only the API Key is needed
-2. This function requires Obsidian version `v1.8` or later. Additionally, you need to enable the `Web Viewer` plugin in the Obsidian settings.
+2. This function requires Obsidian version `v1.8` or later. Additionally, you need to enable the *Web Viewer* plugin in the Obsidian settings.
 
 
 
 ### Open Web Search
 
 1. Only the API Key is needed
-2. This function requires Obsidian version `v1.8` or later. Additionally, you need to enable the `Web Viewer` plugin in the Obsidian settings.
+2. This function requires Obsidian version `v1.8` or later. Additionally, you need to enable the *Web Viewer* plugin in the Obsidian settings.
 3. Recommend using AI search engines like `https://metaso.cn/?q=%s`.
 
 
