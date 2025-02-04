@@ -38,6 +38,14 @@ This is a Stream Dock plugin which could help you open Daily Note, open Note or 
 
 
 
+### Open Web Search
+
+1. Only the API Key is needed
+2. This function requires Obsidian version `v1.8` or later. Additionally, you need to enable the `Web Viewer` plugin in the Obsidian settings.
+3. Recommend using AI search engines like `https://metaso.cn/?q=%s`.
+
+
+
 ### Run Command
 
 1. Input the API Key

@@ -18,6 +18,10 @@
     "Name": "Web Viewer",
     "Tooltip": "Open Web Viewer"
   },
+  "com.moz.obsidian-for-streamdock.web-searcher": {
+    "Name": "Web Searcher",
+    "Tooltip": "Search the web"
+  },
   "Localization": {
     "URL": "URL",
     "Method": "Method",
