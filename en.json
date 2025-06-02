@@ -22,6 +22,10 @@
     "Name": "Web Searcher",
     "Tooltip": "Search the web"
   },
+  "com.moz.obsidian-for-streamdock.switch-tab": {
+    "Name": "Switch Tab",
+    "Tooltip": "Switch between Obsidian Tabs"
+  },
   "Localization": {
     "URL": "URL",
     "Method": "Method",
