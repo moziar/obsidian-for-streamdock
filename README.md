@@ -62,6 +62,13 @@ This is a Stream Dock plugin which could help you open Daily Note, open Note or 
 
 
 
+### Switch Tab
+
+1. Only the API Key is needed
+2. Use the dail to switch between tabs
+
+
+
 ## Credits
 
 Thanks to **@data-enabler**, his [streamdeck-web-requests](https://github.com/data-enabler/streamdeck-web-requests) served as the base for this plugin.
