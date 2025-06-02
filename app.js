@@ -6,6 +6,7 @@ function connected(jsn) {
     $SD.on('com.moz.obsidian-for-streamdock.daily-note.keyDown', (jsonObj) => dailyNote(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.web-viewer.keyDown', (jsonObj) => webViewer(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.web-searcher.keyDown', (jsonObj) => webSearcher(jsonObj));
+    $SD.on('com.moz.obsidian-for-streamdock.switch-tab.dialRotate', (jsonObj) => switchTab(jsonObj));
 };
 
 /**
@@ -116,6 +117,52 @@ function webSearcher(data) {
     const defaultSettings = {
         url: 'http://127.0.0.1:27123/commands/webviewer:search/',
     };
+
+    const newData = {
+        context: data.context,
+        payload: {
+            settings: { ...defaultSettings, ...data.payload.settings },
+        },
+    };
+
+    sendHttp(newData);
+}
+
+/**
+ * @param {{
+ *   context: string,
+ *   payload: {
+ *     settings: {
+ *       url?: string,
+ *       method?: string,
+ *       contentType?: string|null,
+ *       apikey?: string|null,
+ *       body?: string|null,
+ *       ticks?: string|null
+ *     }
+ *   },
+ * }} data
+ */
+function switchTab(data) {
+    // 获取旋转方向，ticks < 0 表示逆时针（左转），ticks > 0 表示顺时针（右转）
+    const ticks = data.payload.ticks;
+
+    let defaultSettings = {
+        url: 'http://127.0.0.1:27123/commands/workspace:next-tab'
+    };
+
+    // 根据旋转方向调用不同的命令
+    if (ticks < 0) {
+        // 左转 - 上一个标签页
+        defaultSettings = {
+            url: 'http://127.0.0.1:27123/commands/workspace:previous-tab'
+        };
+    } else {
+        // 右转 - 下一个标签页
+        defaultSettings = {
+            url: 'http://127.0.0.1:27123/commands/workspace:next-tab'
+        };
+    }
 
     const newData = {
         context: data.context,

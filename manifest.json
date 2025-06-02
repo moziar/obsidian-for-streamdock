@@ -69,6 +69,24 @@
           "Image": "images/run-command"
         }
       ]
+    },
+    {
+      "UUID": "com.moz.obsidian-for-streamdock.switch-tab",
+      "Name": "Switch Tab",
+      "PropertyInspectorPath": "propertyInspector/switch-tab.html",
+      "Tooltip": "切换 Obsidian 标签页",
+      "Icon": "images/switch-tab_action",
+      "Controllers": [
+        "keypad",
+        "Knob"
+      ],
+      "States": [
+        {
+          "FontSize": "11",
+          "Title": "Switch Tab",
+          "Image": "images/switch-tab"
+        }
+      ]
     }
   ],
   "SDKVersion": 2,
