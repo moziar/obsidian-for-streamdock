@@ -77,7 +77,6 @@
       "Tooltip": "切换 Obsidian 标签页",
       "Icon": "images/switch-tab_action",
       "Controllers": [
-        "keypad",
         "Knob"
       ],
       "States": [
@@ -85,6 +84,23 @@
           "FontSize": "11",
           "Title": "Switch Tab",
           "Image": "images/switch-tab"
+        }
+      ]
+    },
+    {
+      "UUID": "com.moz.obsidian-for-streamdock.zoom",
+      "Name": "Zoom",
+      "PropertyInspectorPath": "propertyInspector/zoom.html",
+      "Tooltip": "窗口缩放/重置",
+      "Icon": "images/zoom_action",
+      "Controllers": [
+        "Knob"
+      ],
+      "States": [
+        {
+          "FontSize": "11",
+          "Title": "Zoom",
+          "Image": "images/zoom"
         }
       ]
     }
@@ -98,7 +114,7 @@
   "Category": "enObsidian",
   "CategoryIcon": "images/category",
   "URL": "https://github.com/moziar/obsidian-for-streamdock",
-  "Version": "1.2.0",
+  "Version": "1.3.0",
   "OS": [
     {
         "Platform": "mac",
