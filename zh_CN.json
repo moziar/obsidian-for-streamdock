@@ -4,31 +4,31 @@
   "Category": "enObsidian",
   "com.moz.obsidian-for-streamdock.daily-note": {
     "Name": "Daily Note",
-    "Tooltip": "Open Obsidian Daily Note"
+    "Tooltip": "打开 Obsidian Daily Note"
   },
   "com.moz.obsidian-for-streamdock.open-note": {
     "Name": "Open Note",
-    "Tooltip": "Open specific Obsidian Note"
+    "Tooltip": "打开笔记"
   },
   "com.moz.obsidian-for-streamdock.run-command": {
     "Name": "Run Command",
-    "Tooltip": "Run specific Obsidian Command"
+    "Tooltip": "运行 Obsidian 中的命令"
   },
   "com.moz.obsidian-for-streamdock.web-viewer": {
     "Name": "Web Viewer",
-    "Tooltip": "Open Web Viewer"
+    "Tooltip": "打开 Obsidian Web Viewer"
   },
   "com.moz.obsidian-for-streamdock.web-searcher": {
     "Name": "Web Searcher",
-    "Tooltip": "Search the web"
+    "Tooltip": "打开网络搜索"
   },
   "com.moz.obsidian-for-streamdock.switch-tab": {
     "Name": "Switch Tab",
-    "Tooltip": "Switch between Obsidian Tabs"
+    "Tooltip": "切换 Obsidian 标签页"
   },
   "com.moz.obsidian-for-streamdock.zoom": {
     "Name": "Zoom",
-    "Tooltip": "Zoom In/Out or reset zoom level"
+    "Tooltip": "窗口缩放/重置"
   },
   "Localization": {
     "URL": "URL",
