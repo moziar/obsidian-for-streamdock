@@ -7,7 +7,7 @@ This is a Stream Dock plugin which could help you open Daily Note, open Note or 
 ### 1. Download from MiraBox Space
 
 1. Install the local-REST-API on Obsidian
-1. Download obsidian-for-streamdock dircetly from [ MiraBox Space](https://space.key123.vip/product?id=20250121000509)
+1. Download obsidian-for-streamdock dircetly from [ MiraBox Space](https://space.key123.vip/product?id=20250604000924)
 
 
 
