@@ -9,6 +9,8 @@ function connected(jsn) {
     $SD.on('com.moz.obsidian-for-streamdock.switch-tab.dialRotate', (jsonObj) => switchTab(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.zoom.dialRotate', (jsonObj) => zoomInOut(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.zoom.dialDown', (jsonObj) => zoomReset(jsonObj));
+    $SD.on('com.moz.obsidian-for-streamdock.web-zoom.dialRotate', (jsonObj) => webZoomInOut(jsonObj));
+    $SD.on('com.moz.obsidian-for-streamdock.web-zoom.dialDown', (jsonObj) => webZoomReset(jsonObj));
 };
 
 /**
@@ -240,6 +242,81 @@ function zoomInOut(data) {
 function zoomReset(data) {
     let defaultSettings = {
         url: 'http://127.0.0.1:27123/commands/window:reset-zoom'
+    };
+
+    const newData = {
+        context: data.context,
+        payload: {
+            settings: { ...defaultSettings, ...data.payload.settings },
+        },
+    };
+
+    sendHttp(newData);
+}
+
+/**
+ * @param {{
+ *   context: string,
+ *   payload: {
+ *     settings: {
+ *       url?: string,
+ *       method?: string,
+ *       contentType?: string|null,
+ *       apikey?: string|null,
+ *       body?: string|null,
+ *       ticks?: string|null
+ *     }
+ *   },
+ * }} data
+ */
+function webZoomInOut(data) {
+    // 获取旋转方向，ticks < 0 表示逆时针（左转），ticks > 0 表示顺时针（右转）
+    const ticks = data.payload.ticks;
+
+    let defaultSettings = {
+        url: 'http://127.0.0.1:27123/commands/webviewer:zoom-in'
+    };
+
+    // 根据旋转方向调用不同的命令
+    if (ticks < 0) {
+        // 左转 - 缩小窗口
+        defaultSettings = {
+            url: 'http://127.0.0.1:27123/commands/webviewer:zoom-out'
+        };
+    } else {
+        // 右转 - 放大窗口
+        defaultSettings = {
+            url: 'http://127.0.0.1:27123/commands/webviewer:zoom-in'
+        };
+    }
+
+    const newData = {
+        context: data.context,
+        payload: {
+            settings: { ...defaultSettings, ...data.payload.settings },
+        },
+    };
+
+    sendHttp(newData);
+}
+
+/**
+ * @param {{
+ *   context: string,
+ *   payload: {
+ *     settings: {
+ *       url?: string,
+ *       method?: string,
+ *       contentType?: string|null,
+ *       apikey?: string|null,
+ *       body?: string|null,
+ *     }
+ *   },
+ * }} data
+ */
+function webZoomReset(data) {
+    let defaultSettings = {
+        url: 'http://127.0.0.1:27123/commands/webviewer:zoom-reset'
     };
 
     const newData = {
