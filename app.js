@@ -13,219 +13,65 @@ function connected(jsn) {
     $SD.on('com.moz.obsidian-for-streamdock.web-zoom.dialDown', (jsonObj) => webZoomReset(jsonObj));
 };
 
-/**
- * @param {{
-*   context: string,
-*   payload: {
-*     settings: {
-*       url?: string,
-*       method?: string,
-*       contentType?: string|null,
-*       apikey?: string|null,
-*       body?: string|null,
-*     }
-*   },
-* }} data
-*/
 function runCommand(data) {
-   const defaultSettings = {
-       url: `http://127.0.0.1:27123/commands/${data.payload.settings.command || ''}`,
-   };
-
-   const newData = {
-       context: data.context,
-       payload: {
-           settings: { ...defaultSettings, ...data.payload.settings },
-       },
-   };
-
-   sendHttp(newData);
+    const command = data.payload.settings.command || '';
+    const defaultUrl = `http://127.0.0.1:27123/commands/${command}`;
+    executeSimpleCommand(data, defaultUrl);
 }
 
-/**
- * @param {{
-*   context: string,
-*   payload: {
-*     settings: {
-*       url?: string,
-*       method?: string,
-*       contentType?: string|null,
-*       apikey?: string|null,
-*       body?: string|null,
-*     }
-*   },
-* }} data
-*/
 function openNote(data) {
-   const notePath = data.payload.settings.notepath || '';
-   const encodedNotepath = encodeURIComponent(notePath);
-   const defaultSettings = {
-       url: `http://127.0.0.1:27123/open/${encodedNotepath}?newLeaf=true`,
-   };
-
-   const newData = {
-       context: data.context,
-       payload: {
-           settings: { ...defaultSettings, ...data.payload.settings },
-       },
-   };
-
-   sendHttp(newData);
+    const notePath = data.payload.settings.notepath || '';
+    const encodedNotepath = encodeURIComponent(notePath);
+    const defaultUrl = `http://127.0.0.1:27123/open/${encodedNotepath}?newLeaf=true`;
+    executeSimpleCommand(data, defaultUrl);
 }
 
-/**
- * @param {{
- *   context: string,
- *   payload: {
- *     settings: {
- *       url?: string,
- *       method?: string,
- *       contentType?: string|null,
- *       apikey?: string|null,
- *       body?: string|null,
- *     }
- *   },
- * }} data
- */
 function dailyNote(data) {
-    const defaultSettings = {
-        url: 'http://127.0.0.1:27123/commands/daily-notes/',
-    };
-
-    const newData = {
-        context: data.context,
-        payload: {
-            settings: { ...defaultSettings, ...data.payload.settings },
-        },
-    };
-
-    sendHttp(newData);
+    executeSimpleCommand(data, 'http://127.0.0.1:27123/commands/daily-notes/');
 }
 
 function webViewer(data) {
-    const defaultSettings = {
-        url: 'http://127.0.0.1:27123/commands/webviewer:open/',
-    };
-
-    const newData = {
-        context: data.context,
-        payload: {
-            settings: { ...defaultSettings, ...data.payload.settings },
-        },
-    };
-
-    sendHttp(newData);
+    executeSimpleCommand(data, 'http://127.0.0.1:27123/commands/webviewer:open/');
 }
 
 function webSearcher(data) {
-    const defaultSettings = {
-        url: 'http://127.0.0.1:27123/commands/webviewer:search/',
-    };
-
-    const newData = {
-        context: data.context,
-        payload: {
-            settings: { ...defaultSettings, ...data.payload.settings },
-        },
-    };
-
-    sendHttp(newData);
+    executeSimpleCommand(data, 'http://127.0.0.1:27123/commands/webviewer:search/');
 }
 
-/**
- * @param {{
- *   context: string,
- *   payload: {
- *     settings: {
- *       url?: string,
- *       method?: string,
- *       contentType?: string|null,
- *       apikey?: string|null,
- *       body?: string|null,
- *       ticks?: string|null
- *     }
- *   },
- * }} data
- */
 function switchTab(data) {
-    // 获取旋转方向，ticks < 0 表示逆时针（左转），ticks > 0 表示顺时针（右转）
-    const ticks = data.payload.ticks;
-
-    let defaultSettings = {
-        url: 'http://127.0.0.1:27123/commands/workspace:next-tab'
-    };
-
-    // 根据旋转方向调用不同的命令
-    if (ticks < 0) {
-        // 左转 - 上一个标签页
-        defaultSettings = {
-            url: 'http://127.0.0.1:27123/commands/workspace:previous-tab'
-        };
-    } else {
-        // 右转 - 下一个标签页
-        defaultSettings = {
-            url: 'http://127.0.0.1:27123/commands/workspace:next-tab'
-        };
-    }
-
-    const newData = {
-        context: data.context,
-        payload: {
-            settings: { ...defaultSettings, ...data.payload.settings },
-        },
-    };
-
-    sendHttp(newData);
+    dialRotate(
+        data,
+        'http://127.0.0.1:27123/commands/workspace:next-tab',
+        'http://127.0.0.1:27123/commands/workspace:previous-tab'
+    );
 }
 
-/**
- * @param {{
- *   context: string,
- *   payload: {
- *     settings: {
- *       url?: string,
- *       method?: string,
- *       contentType?: string|null,
- *       apikey?: string|null,
- *       body?: string|null,
- *       ticks?: string|null
- *     }
- *   },
- * }} data
- */
 function zoomInOut(data) {
-    // 获取旋转方向，ticks < 0 表示逆时针（左转），ticks > 0 表示顺时针（右转）
-    const ticks = data.payload.ticks;
-
-    let defaultSettings = {
-        url: 'http://127.0.0.1:27123/commands/window:zoom-in'
-    };
-
-    // 根据旋转方向调用不同的命令
-    if (ticks < 0) {
-        // 左转 - 缩小窗口
-        defaultSettings = {
-            url: 'http://127.0.0.1:27123/commands/window:zoom-out'
-        };
-    } else {
-        // 右转 - 放大窗口
-        defaultSettings = {
-            url: 'http://127.0.0.1:27123/commands/window:zoom-in'
-        };
-    }
-
-    const newData = {
-        context: data.context,
-        payload: {
-            settings: { ...defaultSettings, ...data.payload.settings },
-        },
-    };
-
-    sendHttp(newData);
+    dialRotate(
+        data,
+        'http://127.0.0.1:27123/commands/window:zoom-in',
+        'http://127.0.0.1:27123/commands/window:zoom-out'
+    );
 }
 
+function zoomReset(data) {
+    executeSimpleCommand(data, 'http://127.0.0.1:27123/commands/window:reset-zoom');
+}
+
+function webZoomInOut(data) {
+    dialRotate(
+        data,
+        'http://127.0.0.1:27123/commands/webviewer:zoom-in',
+        'http://127.0.0.1:27123/commands/webviewer:zoom-out'
+    );
+}
+
+function webZoomReset(data) {
+    executeSimpleCommand(data, 'http://127.0.0.1:27123/commands/webviewer:zoom-reset');
+}
 
 /**
+ * 通用的简单命令执行函数
  * @param {{
  *   context: string,
  *   payload: {
@@ -238,10 +84,11 @@ function zoomInOut(data) {
  *     }
  *   },
  * }} data
+ * @param {string} defaultUrl - 默认URL
  */
-function zoomReset(data) {
-    let defaultSettings = {
-        url: 'http://127.0.0.1:27123/commands/window:reset-zoom'
+function executeSimpleCommand(data, defaultUrl) {
+    const defaultSettings = {
+        url: defaultUrl
     };
 
     const newData = {
@@ -255,6 +102,7 @@ function zoomReset(data) {
 }
 
 /**
+ * 具备旋钮功能的函数
  * @param {{
  *   context: string,
  *   payload: {
@@ -268,56 +116,23 @@ function zoomReset(data) {
  *     }
  *   },
  * }} data
+ * @param {string} positiveCommand - 正向命令URL（右转）
+ * @param {string} negativeCommand - 负向命令URL（左转），可选
  */
-function webZoomInOut(data) {
-    // 获取旋转方向，ticks < 0 表示逆时针（左转），ticks > 0 表示顺时针（右转）
-    const ticks = data.payload.ticks;
-
+function dialRotate(data, positiveCommand, negativeCommand = null) {
     let defaultSettings = {
-        url: 'http://127.0.0.1:27123/commands/webviewer:zoom-in'
+        url: positiveCommand
     };
 
-    // 根据旋转方向调用不同的命令
-    if (ticks < 0) {
-        // 左转 - 缩小窗口
-        defaultSettings = {
-            url: 'http://127.0.0.1:27123/commands/webviewer:zoom-out'
-        };
-    } else {
-        // 右转 - 放大窗口
-        defaultSettings = {
-            url: 'http://127.0.0.1:27123/commands/webviewer:zoom-in'
-        };
+    // 如果有负向命令且存在ticks参数，则根据ticks值选择命令
+    if (negativeCommand && data.payload.ticks !== undefined) {
+        const ticks = data.payload.ticks;
+        if (ticks < 0) {
+            defaultSettings = {
+                url: negativeCommand
+            };
+        }
     }
-
-    const newData = {
-        context: data.context,
-        payload: {
-            settings: { ...defaultSettings, ...data.payload.settings },
-        },
-    };
-
-    sendHttp(newData);
-}
-
-/**
- * @param {{
- *   context: string,
- *   payload: {
- *     settings: {
- *       url?: string,
- *       method?: string,
- *       contentType?: string|null,
- *       apikey?: string|null,
- *       body?: string|null,
- *     }
- *   },
- * }} data
- */
-function webZoomReset(data) {
-    let defaultSettings = {
-        url: 'http://127.0.0.1:27123/commands/webviewer:zoom-reset'
-    };
 
     const newData = {
         context: data.context,
