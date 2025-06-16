@@ -7,15 +7,15 @@ This is a Stream Dock plugin which could help you open Daily Note, open Note or 
 ### 1. Download from MiraBox Space
 
 1. Install the local-REST-API on Obsidian
-1. Download obsidian-for-streamdock dircetly from [ MiraBox Space](https://space.key123.vip/product?id=20250121000509)
+1. Download obsidian-for-streamdock dircetly from [ MiraBox Space](https://space.key123.vip/product?id=20250604000924)
 
 
 
 ### 2. Manual Installation
 
 1. Install the local-REST-API on Obsidian
-2. Download the `.zip` file from the [release](https://github.com/moziar/obsidian-for-streamdock/releases) page
-3. Unzip the file, 和 copy it to your Stream Dock plugin folder
+2. Download the `.sdPlugin` file from the [release](https://github.com/moziar/obsidian-for-streamdock/releases) page
+3. Double click it to install
 
 
 
@@ -25,29 +25,29 @@ This is a Stream Dock plugin which could help you open Daily Note, open Note or 
 >
 > You could get the API Key from local-REST-API setting page
 
+### Keypad
 
-
-### Open Daily Note
+#### Open Daily Note
 
 1. Only the API Key is needed
 
 
 
-### Open Note
+#### Open Note
 
 1. Input the API Key
 3. Input the note relative path to `Note Path`, the plugin will auto encode it
 
 
 
-### Open Obsidian Web Viewer
+#### Open Obsidian Web Viewer
 
 1. Only the API Key is needed
 2. This function requires Obsidian version `v1.8` or later. Additionally, you need to enable the *Web Viewer* plugin in the Obsidian settings.
 
 
 
-### Open Web Search
+#### Open Web Search
 
 1. Only the API Key is needed
 2. This function requires Obsidian version `v1.8` or later. Additionally, you need to enable the *Web Viewer* plugin in the Obsidian settings.
@@ -55,10 +55,26 @@ This is a Stream Dock plugin which could help you open Daily Note, open Note or 
 
 
 
-### Run Command
+#### Run Command
 
 1. Input the API Key
 2. Input the command-id to `Command`. You can get the id from [Local REST API for Obsidian](https://coddingtonbear.github.io/obsidian-local-rest-api/#/)
+
+
+
+### Dial
+
+#### Switch Tab
+
+1. Only the API Key is needed
+2. Use the dial to switch between tabs
+
+
+
+#### Zoom
+
+1. Only the API Key is needed
+2. Use the dial to zoom in, zoom out or reset zoom
 
 
 

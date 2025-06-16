@@ -1,0 +1,41 @@
+{
+  "Name": "enObsidian",
+  "Description": "StreamDeck Plugin for Obsidian",
+  "Category": "enObsidian",
+  "com.moz.obsidian-for-streamdock.daily-note": {
+    "Name": "Daily Note",
+    "Tooltip": "打开 Obsidian Daily Note"
+  },
+  "com.moz.obsidian-for-streamdock.open-note": {
+    "Name": "Open Note",
+    "Tooltip": "打开笔记"
+  },
+  "com.moz.obsidian-for-streamdock.run-command": {
+    "Name": "Run Command",
+    "Tooltip": "运行 Obsidian 中的命令"
+  },
+  "com.moz.obsidian-for-streamdock.web-viewer": {
+    "Name": "Web Viewer",
+    "Tooltip": "打开 Obsidian Web Viewer"
+  },
+  "com.moz.obsidian-for-streamdock.web-searcher": {
+    "Name": "Web Searcher",
+    "Tooltip": "打开网络搜索"
+  },
+  "com.moz.obsidian-for-streamdock.switch-tab": {
+    "Name": "Switch Tab",
+    "Tooltip": "切换 Obsidian 标签页"
+  },
+  "com.moz.obsidian-for-streamdock.zoom": {
+    "Name": "Zoom",
+    "Tooltip": "窗口缩放/重置"
+  },
+  "Localization": {
+    "URL": "URL",
+    "Method": "Method",
+    "ContentType": "Content Type",
+    "Headers": "Headers",
+    "Message": "Message",
+    "Body": "Body"
+  }
+}
