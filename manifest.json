@@ -88,6 +88,23 @@
       ]
     },
     {
+      "UUID": "com.moz.obsidian-for-streamdock.web-zoom",
+      "Name": "Web Zoom",
+      "PropertyInspectorPath": "propertyInspector/web-zoom.html",
+      "Tooltip": "Web Viewer 缩放/重置",
+      "Icon": "images/web-zoom_action",
+      "Controllers": [
+        "Knob"
+      ],
+      "States": [
+        {
+          "FontSize": "11",
+          "Title": "Web Zoom",
+          "Image": "images/web-zoom"
+        }
+      ]
+    },
+    {
       "UUID": "com.moz.obsidian-for-streamdock.zoom",
       "Name": "Zoom",
       "PropertyInspectorPath": "propertyInspector/zoom.html",
@@ -114,7 +131,7 @@
   "Category": "enObsidian",
   "CategoryIcon": "images/category",
   "URL": "https://github.com/moziar/obsidian-for-streamdock",
-  "Version": "1.3.0",
+  "Version": "1.4.0",
   "OS": [
     {
         "Platform": "mac",

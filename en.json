@@ -26,6 +26,14 @@
     "Name": "Switch Tab",
     "Tooltip": "Switch between Obsidian Tabs"
   },
+  "com.moz.obsidian-for-streamdock.zoom": {
+    "Name": "Zoom",
+    "Tooltip": "Zoom In/Out or reset zoom level"
+  },
+  "com.moz.obsidian-for-streamdock.web-zoom": {
+    "Name": "Web Zoom",
+    "Tooltip": "Zoom In/Out or reset zoom level in Web Viewer"
+  },
   "Localization": {
     "URL": "URL",
     "Method": "Method",
