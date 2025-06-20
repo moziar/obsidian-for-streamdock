@@ -11,6 +11,8 @@ function connected(jsn) {
     $SD.on('com.moz.obsidian-for-streamdock.zoom.dialDown', (jsonObj) => zoomReset(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.web-zoom.dialRotate', (jsonObj) => webZoomInOut(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.web-zoom.dialDown', (jsonObj) => webZoomReset(jsonObj));
+    $SD.on('com.moz.obsidian-for-streamdock.switch-daily.dialRotate', (jsonObj) => switchDaily(jsonObj));
+    $SD.on('com.moz.obsidian-for-streamdock.switch-daily.dialDown', (jsonObj) => dailyNote(jsonObj));
 };
 
 function runCommand(data) {
@@ -56,6 +58,14 @@ function zoomInOut(data) {
 
 function zoomReset(data) {
     executeSimpleCommand(data, 'http://127.0.0.1:27123/commands/window:reset-zoom');
+}
+
+function switchDaily(data) {
+    dialRotate(
+        data,
+        'http://127.0.0.1:27123/commands/periodic-notes:next-daily-note',
+        'http://127.0.0.1:27123/commands/periodic-notes:prev-daily-note'
+    );
 }
 
 function webZoomInOut(data) {
