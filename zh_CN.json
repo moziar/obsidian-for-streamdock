@@ -30,6 +30,10 @@
     "Name": "Zoom",
     "Tooltip": "窗口缩放/重置"
   },
+  "com.moz.obsidian-for-streamdock.web-zoom": {
+    "Name": "Web Zoom",
+    "Tooltip": "Web Viewer 缩放/重置"
+  },
   "Localization": {
     "URL": "URL",
     "Method": "Method",
