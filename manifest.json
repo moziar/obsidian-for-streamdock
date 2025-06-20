@@ -120,6 +120,23 @@
           "Image": "images/zoom"
         }
       ]
+    },
+    {
+      "UUID": "com.moz.obsidian-for-streamdock.switch-daily",
+      "Name": "Switch Daily",
+      "PropertyInspectorPath": "propertyInspector/switch-daily.html",
+      "Tooltip": "切换 Obsidian Daily Note",
+      "Icon": "images/switch-daily_action",
+      "Controllers": [
+        "Knob"
+      ],
+      "States": [
+        {
+          "FontSize": "11",
+          "Title": "Switch Daily",
+          "Image": "images/switch-daily"
+        }
+      ]
     }
   ],
   "SDKVersion": 2,
