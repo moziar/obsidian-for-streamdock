@@ -85,9 +85,9 @@ This is a Stream Dock plugin which could help you open Daily Note, open Note or 
 
 
 
-#### Swith Daily
+#### Switch Daily
 1. Only the API Key is needed
-2. This function relies on the Obsidian plugin Periodic Notes for navigation. Make sure to install and enable it.
+2. This function relies on the Obsidian plugin *Periodic Notes* for navigation. Make sure to install and enable it.
 3. Use the dial to switch between the previous/next daily note, or today’s daily note.
 
 
