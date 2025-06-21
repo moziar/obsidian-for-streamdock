@@ -34,9 +34,9 @@
     "Name": "Web Zoom",
     "Tooltip": "Zoom In/Out or reset zoom level in Web Viewer"
   },
-  "com.moz.obsidian-for-streamdock.switch-daily": {
-    "Name": "Switch Daily",
-    "Tooltip": "Switch between Daily Notes"
+  "com.moz.obsidian-for-streamdock.note-navigator": {
+    "Name": "Note Navigator",
+    "Tooltip": "Navigate through daily and weekly notes by date"
   },
   "Localization": {
     "URL": "URL",

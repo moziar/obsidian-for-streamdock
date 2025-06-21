@@ -34,9 +34,9 @@
     "Name": "Web Zoom",
     "Tooltip": "Web Viewer 缩放/重置"
   },
-  "com.moz.obsidian-for-streamdock.switch-daily": {
-    "Name": "Switch Daily",
-    "Tooltip": "切换 Obsidian Daily Note"
+  "com.moz.obsidian-for-streamdock.note-navigator": {
+    "Name": "Note Navigator",
+    "Tooltip": "在不同日期的笔记之间进行切换"
   },
   "Localization": {
     "URL": "URL",

@@ -122,19 +122,18 @@
       ]
     },
     {
-      "UUID": "com.moz.obsidian-for-streamdock.switch-daily",
-      "Name": "Switch Daily",
-      "PropertyInspectorPath": "propertyInspector/switch-daily.html",
-      "Tooltip": "切换 Obsidian Daily Note",
-      "Icon": "images/switch-daily_action",
+      "UUID": "com.moz.obsidian-for-streamdock.note-navigator",
+      "Name": "Note Navigator",
+      "PropertyInspectorPath": "propertyInspector/note-navigator.html",
+      "Tooltip": "在不同日期的笔记之间进行切换",
+      "Icon": "images/note-navigator_action",
       "Controllers": [
         "Knob"
       ],
       "States": [
         {
           "FontSize": "11",
-          "Title": "Switch Daily",
-          "Image": "images/switch-daily"
+          "Image": "images/note-navigator"
         }
       ]
     }

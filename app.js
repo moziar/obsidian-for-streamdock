@@ -11,8 +11,10 @@ function connected(jsn) {
     $SD.on('com.moz.obsidian-for-streamdock.zoom.dialDown', (jsonObj) => zoomReset(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.web-zoom.dialRotate', (jsonObj) => webZoomInOut(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.web-zoom.dialDown', (jsonObj) => webZoomReset(jsonObj));
-    $SD.on('com.moz.obsidian-for-streamdock.switch-daily.dialRotate', (jsonObj) => switchDaily(jsonObj));
-    $SD.on('com.moz.obsidian-for-streamdock.switch-daily.dialDown', (jsonObj) => dailyNote(jsonObj));
+    $SD.on('com.moz.obsidian-for-streamdock.note-navigator.dialRotate', (jsonObj) => noteNavigator(jsonObj));
+    $SD.on('com.moz.obsidian-for-streamdock.note-navigator.dialDown', (jsonObj) => dailyNote(jsonObj));
+    $SD.on('com.moz.obsidian-for-streamdock.note-navigator.willAppear', (jsonObj) => updateNavigatorTitle(jsonObj));
+    $SD.on('com.moz.obsidian-for-streamdock.note-navigator.didReceiveSettings', (jsonObj) => updateNavigatorTitle(jsonObj));
 };
 
 function runCommand(data) {
@@ -29,7 +31,19 @@ function openNote(data) {
 }
 
 function dailyNote(data) {
-    executeSimpleCommand(data, 'http://127.0.0.1:27123/commands/daily-notes/');
+    const noteType = data.payload.settings.noteType || NoteType.DAILY;
+    let url = '';
+
+    switch (noteType) {
+        case NoteType.WEEKLY:
+            url = 'http://127.0.0.1:27123/commands/periodic-notes:open-weekly-note';
+            break;
+        case NoteType.DAILY:
+        default:
+            url = 'http://127.0.0.1:27123/commands/daily-notes/';
+            break;
+    }
+    executeSimpleCommand(data, url);
 }
 
 function webViewer(data) {
@@ -60,11 +74,47 @@ function zoomReset(data) {
     executeSimpleCommand(data, 'http://127.0.0.1:27123/commands/window:reset-zoom');
 }
 
-function switchDaily(data) {
+function updateNavigatorTitle(data) {
+    const { context, payload } = data;
+    const settings = payload.settings;
+    const noteType = settings.noteType || NoteType.DAILY;
+    let title = 'Daily';
+    if (noteType === NoteType.WEEKLY) {
+        title = 'Weekly';
+    }
+    $SD.api.setTitle(context, title);
+}
+
+const NoteType = {
+    DAILY: 'Daily',
+    WEEKLY: 'Weekly',
+    MONTHLY: 'Monthly',
+    QUARTERLY: 'Quarterly',
+    YEARLY: 'Yearly',
+};
+
+function noteNavigator(data) {
+    const noteType = data.payload.settings.noteType || NoteType.DAILY;
+
+    let nextCommand = '';
+    let prevCommand = '';
+
+    switch (noteType) {
+        case NoteType.WEEKLY:
+            nextCommand = 'periodic-notes:next-weekly-note';
+            prevCommand = 'periodic-notes:prev-weekly-note';
+            break;
+        case NoteType.DAILY:
+        default:
+            nextCommand = 'periodic-notes:next-daily-note';
+            prevCommand = 'periodic-notes:prev-daily-note';
+            break;
+    }
+
     dialRotate(
         data,
-        'http://127.0.0.1:27123/commands/periodic-notes:next-daily-note',
-        'http://127.0.0.1:27123/commands/periodic-notes:prev-daily-note'
+        `http://127.0.0.1:27123/commands/${nextCommand}`,
+        `http://127.0.0.1:27123/commands/${prevCommand}`
     );
 }
 
