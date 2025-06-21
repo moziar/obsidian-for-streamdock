@@ -85,10 +85,11 @@ This is a Stream Dock plugin which could help you open Daily Note, open Note or 
 
 
 
-#### Switch Daily
-1. Only the API Key is needed
-2. This function relies on the Obsidian plugin *Periodic Notes* for navigation. Make sure to install and enable it.
-3. Use the dial to switch between the previous/next daily note, or today’s daily note.
+#### Note Navigator
+1. Select the note type to navigate (Daily/Weekly), the title will auto updates based on it.
+2. Enter the API Key
+3. This function relies on the Obsidian plugin *Periodic Notes* for navigation. Make sure to install and enable it.
+4. Use the dial to navigate through daily and weekly notes by date
 
 
 
