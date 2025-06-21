@@ -225,7 +225,7 @@ function sendHttp(data) {
     const headers = `Authorization: Bearer ${data.payload.settings.apikey || ''}`;
     const body = '';
     
-    log('sendHttp', { url, method, contentType, headers, body });
+    // log('sendHttp', { url, method, contentType, headers, body });
 
     let defaultHeaders = contentType ? {
         'Content-Type':  contentType
@@ -253,7 +253,7 @@ function sendHttp(data) {
         ...inputHeaders
     }
 
-    log(fullHeaders);
+    // log(fullHeaders);
 
     if (!url || !method) {
         showAlert(data.context);

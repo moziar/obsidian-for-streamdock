@@ -82,7 +82,7 @@
       "States": [
         {
           "FontSize": "11",
-          "Title": "Switch Tab",
+          "Title": "Tab",
           "Image": "images/switch-tab"
         }
       ]
@@ -99,7 +99,7 @@
       "States": [
         {
           "FontSize": "11",
-          "Title": "Web Zoom",
+          "Title": "Web",
           "Image": "images/web-zoom"
         }
       ]
