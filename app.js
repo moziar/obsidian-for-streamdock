@@ -224,12 +224,11 @@ function noteFinder(data) {
     let query = encodeURIComponent(data.payload.settings.query) || '';
     const property_key = data.payload.settings.property_key || '';
     const property_value = data.payload.settings.property_value || '';
-    const status = data.payload.settings.status || '';
+    const status = data.payload.settings.status || SearchType.ANY;
 
     let switchType = type;
     if (type === SearchType.TASK) {
         switchType = status;
-        console.log('switchType', switchType);
     }
 
     if ( !vault ) {
@@ -238,15 +237,11 @@ function noteFinder(data) {
         let defaultUrl = `obsidian://search?vault=${vault}&query=`;
         prefix = getPrefixByType(switchType);
 
-        console.log('prefix', prefix);
-
         if (switchType === SearchType.PROPERTY) {
             query = encodeURIComponent(`[${property_key}:${property_value}]`);
         } else if (switchType === SearchType.PATH) {
             query = `path:"${query}"`;
         }
-        
-        console.log("query: " + query);
         
         defaultUrl += `${prefix}${query}`;
 
