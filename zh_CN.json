@@ -10,6 +10,10 @@
     "Name": "Open Note",
     "Tooltip": "打开笔记"
   },
+  "com.moz.obsidian-for-streamdock.note-finder": {
+    "Name": "Note Finder",
+    "Tooltip": "搜索笔记"
+  },
   "com.moz.obsidian-for-streamdock.run-command": {
     "Name": "Run Command",
     "Tooltip": "运行 Obsidian 中的命令"

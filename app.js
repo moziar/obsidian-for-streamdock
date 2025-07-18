@@ -6,6 +6,7 @@ function connected(jsn) {
     $SD.on('com.moz.obsidian-for-streamdock.daily-note.keyDown', (jsonObj) => dailyNote(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.web-viewer.keyDown', (jsonObj) => webViewer(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.web-searcher.keyDown', (jsonObj) => webSearcher(jsonObj));
+    $SD.on('com.moz.obsidian-for-streamdock.note-finder.keyDown', (jsonObj) => noteFinder(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.switch-tab.dialRotate', (jsonObj) => switchTab(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.zoom.dialRotate', (jsonObj) => zoomInOut(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.zoom.dialDown', (jsonObj) => zoomReset(jsonObj));
@@ -202,6 +203,59 @@ function dialRotate(data, positiveCommand, negativeCommand = null) {
     };
 
     sendHttp(newData);
+}
+
+const SearchType = {
+    ALL: 'All',
+    TAG: 'Tag',
+    TASK: 'Task',
+    TASK_TODO: 'TaskTodo',
+    TASK_DONE: 'TaskDone',
+    PROPERTY: 'Property'
+}
+
+// 测试用，这里后面需要做处理
+function noteFinder(data) {
+    const vault = encodeURIComponent(data.payload.settings.vault) || '';
+    const type = data.payload.settings.type || SearchType.ALL;
+    let query = encodeURIComponent(data.payload.settings.query) || '';
+    const property_key = data.payload.settings.property_key || '';
+    const property_value = data.payload.settings.property_value || '';
+
+    let prefix = '';
+
+    if ( !vault ) {
+        showAlert(data.context);
+    } else {
+        let defaultUrl = `obsidian://search?vault=${vault}&query=`;    
+
+        switch (type) {     
+            case SearchType.ALL:
+            default:
+                prefix = '';
+                break;
+            case SearchType.TAG:
+                prefix = 'tag:';
+                break;
+            case SearchType.TASK:
+                prefix = 'task:';
+                break;
+            case SearchType.TASK_TODO:
+                prefix = 'task-todo:';
+                break;
+            case SearchType.TASK_DONE:
+                prefix = 'task-done:';
+                break;
+            case SearchType.PROPERTY:
+                query = encodeURIComponent(`[${property_key}:${property_value}]`);
+                break;
+        }
+        
+        defaultUrl += `${prefix}${query}`;
+
+        $SD.api.openUrl(data.context, defaultUrl);
+        showOk(data.context);
+    }
 }
 
 /**
