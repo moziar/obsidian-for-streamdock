@@ -29,6 +29,20 @@
       ]
     },
     {
+      "UUID": "com.moz.obsidian-for-streamdock.note-finder",
+      "Name": "Note Finder",
+      "Tooltip": "搜索笔记",
+      "PropertyInspectorPath": "propertyInspector/note-finder.html",
+      "Icon": "images/note-finder_action",
+      "States": [
+        {
+          "FontSize": "11",
+          "Title": "Finder",
+          "Image": "images/note-finder"
+        }
+      ]
+    },
+    {
       "UUID": "com.moz.obsidian-for-streamdock.web-viewer",
       "Name": "Web Viewer",
       "Tooltip": "打开 Obsidian Web Viewer",
@@ -161,5 +175,5 @@
   "Software":
     {
         "MinimumVersion" : "4.2"
-    }
+  }
 }
