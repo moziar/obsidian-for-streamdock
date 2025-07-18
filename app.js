@@ -209,6 +209,8 @@ const SearchType = {
     ALL: 'All',
     TAG: 'Tag',
     TASK: 'Task',
+    FILE: 'File',
+    PATH: 'Path',
     TASK_TODO: 'TaskTodo',
     TASK_DONE: 'TaskDone',
     PROPERTY: 'Property'
@@ -236,6 +238,12 @@ function noteFinder(data) {
                 break;
             case SearchType.TAG:
                 prefix = 'tag:';
+                break;
+            case SearchType.FILE:
+                prefix = 'file:';
+                break;
+            case SearchType.PATH:
+                query = `path:"${query}"`;
                 break;
             case SearchType.TASK:
                 prefix = 'task:';
