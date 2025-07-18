@@ -211,9 +211,10 @@ const SearchType = {
     TASK: 'Task',
     FILE: 'File',
     PATH: 'Path',
-    TASK_TODO: 'TaskTodo',
-    TASK_DONE: 'TaskDone',
-    PROPERTY: 'Property'
+    PROPERTY: 'Property',
+    ANY: 'AnyTask',
+    TODO: 'TodoTask',
+    DONE: 'DoneTask'
 }
 
 // 测试用，这里后面需要做处理
@@ -223,47 +224,60 @@ function noteFinder(data) {
     let query = encodeURIComponent(data.payload.settings.query) || '';
     const property_key = data.payload.settings.property_key || '';
     const property_value = data.payload.settings.property_value || '';
+    const status = data.payload.settings.status || '';
 
-    let prefix = '';
+    let switchType = type;
+    if (type === SearchType.TASK) {
+        switchType = status;
+        console.log('switchType', switchType);
+    }
 
     if ( !vault ) {
         showAlert(data.context);
     } else {
-        let defaultUrl = `obsidian://search?vault=${vault}&query=`;    
+        let defaultUrl = `obsidian://search?vault=${vault}&query=`;
+        prefix = getPrefixByType(switchType);
 
-        switch (type) {     
-            case SearchType.ALL:
-            default:
-                prefix = '';
-                break;
-            case SearchType.TAG:
-                prefix = 'tag:';
-                break;
-            case SearchType.FILE:
-                prefix = 'file:';
-                break;
-            case SearchType.PATH:
-                query = `path:"${query}"`;
-                break;
-            case SearchType.TASK:
-                prefix = 'task:';
-                break;
-            case SearchType.TASK_TODO:
-                prefix = 'task-todo:';
-                break;
-            case SearchType.TASK_DONE:
-                prefix = 'task-done:';
-                break;
-            case SearchType.PROPERTY:
-                query = encodeURIComponent(`[${property_key}:${property_value}]`);
-                break;
+        console.log('prefix', prefix);
+
+        if (switchType === SearchType.PROPERTY) {
+            query = encodeURIComponent(`[${property_key}:${property_value}]`);
+        } else if (switchType === SearchType.PATH) {
+            query = `path:"${query}"`;
         }
+        
+        console.log("query: " + query);
         
         defaultUrl += `${prefix}${query}`;
 
         $SD.api.openUrl(data.context, defaultUrl);
         showOk(data.context);
     }
+}
+
+function getPrefixByType(type){
+    switch (type) {
+        case SearchType.ALL:
+        default:
+            prefix = '';
+            break;
+        case SearchType.TAG:
+            prefix = 'tag:';
+            break;
+        case SearchType.FILE:
+            prefix = 'file:';
+            break;
+        case SearchType.ANY:
+            prefix = 'task:';
+            break;
+        case SearchType.TODO:
+            prefix = 'task-todo:';
+            break;
+        case SearchType.DONE:
+            prefix = 'task-done:';
+            break;
+    }
+    return prefix;
 }
 
 /**

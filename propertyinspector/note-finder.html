@@ -21,12 +21,18 @@
       <select class="sdpi-item-value select" id="type">
         <option value="All" selected>All</option>
         <option value="Tag">Tag</option>
-        <option value="Property">Property</option>
         <option value="Task">Task</option>
         <option value="File">File</option>
         <option value="Path">Path</option>
-        <option value="TaskTodo">Task Todo</option>
-        <option value="TaskDone">Task Done</option>
+        <option value="Property">Property</option>
+      </select>
+    </div>
+    <div class="sdpi-item" id="status_input">
+      <div class="sdpi-item-label" data-localize="Status">Status</div>
+      <select class="sdpi-item-value select" id="status">
+        <option value="AnyTask" selected>Any</option>
+        <option value="TodoTask">Todo</option>
+        <option value="DoneTask">Done</option>
       </select>
     </div>
     <div type="textarea" class="sdpi-item" id="query_input" title="Enter the search query">
@@ -68,6 +74,7 @@
     $SD.on('connected', (jsn) => {
       const typeSelect = document.getElementById('type');
       const queryInput = document.getElementById('query_input');
+      const statusInput = document.getElementById('status_input');
       const propertyInput = document.getElementById('property_input');
       
       // 初始化显示状态
@@ -77,11 +84,13 @@
       typeSelect.addEventListener('change', function() {
         updateInputVisibility();
         
-        // 当类型为 Property 时，清空 query 值
+        // 当类型为 Property 时，清空 query 和 status 值
         // 当类型不是 Property 时，清空 property_key 和 property_value 值
         if (typeSelect.value === 'Property') {
           const queryElement = document.getElementById('query');
           queryElement.value = '';
+          const statusElement = document.getElementById('status');
+          statusElement.value = '';
           // 触发设置保存
           const event = new Event('input', { bubbles: true });
           queryElement.dispatchEvent(event);
@@ -101,9 +110,15 @@
       function updateInputVisibility() {
         if (typeSelect.value === 'Property') {
           queryInput.style.display = 'none';
+          statusInput.style.display = 'none';
           propertyInput.style.display = 'flex';
+        } else if (typeSelect.value === 'Task') {
+          queryInput.style.display = 'flex';
+          statusInput.style.display = 'flex';
+          propertyInput.style.display = 'none';
         } else {
           queryInput.style.display = 'flex';
+          statusInput.style.display = 'none';
           propertyInput.style.display = 'none';
         }
       }
