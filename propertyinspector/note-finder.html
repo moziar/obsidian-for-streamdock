@@ -63,7 +63,7 @@
   <script src="js/index_pi.js"></script>
   <script>
     // 初始化时根据当前选择的类型显示或隐藏相应的输入框
-    document.addEventListener('DOMContentLoaded', function() {
+    $SD.on('connected', (jsn) => {
       const typeSelect = document.getElementById('type');
       const queryInput = document.getElementById('query_input');
       const propertyInput = document.getElementById('property_input');
