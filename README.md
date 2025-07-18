@@ -40,6 +40,15 @@ This is a Stream Dock plugin which could help you open Daily Note, open Note or 
 
 
 
+#### Note Finder
+
+1. Input your Vault name
+2. Choose the type you want to search (`all`, `tag`, `property`, `all task`, `task todo`, `task done`)
+3. Input the search query, or  property name and value if you choose property. Note that `#` is not needed for tag search.
+4. This function needs the *StreamDock* software `v3.10.194` or newer. 
+
+ 
+
 #### Open Obsidian Web Viewer
 
 1. Only the API Key is needed
