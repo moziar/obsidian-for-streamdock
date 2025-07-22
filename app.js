@@ -217,7 +217,6 @@ const SearchType = {
     DONE: 'DoneTask'
 }
 
-// 测试用，这里后面需要做处理
 function noteFinder(data) {
     const vault = encodeURIComponent(data.payload.settings.vault) || '';
     const type = data.payload.settings.type || SearchType.ALL;
