@@ -238,6 +238,7 @@ function noteFinder(data) {
         prefix = getPrefixByType(switchType);
 
         if (switchType === SearchType.PROPERTY) {
+            query = `[${property_key.trim()}:${property_value.trim()}]`;
         } else if (switchType === SearchType.PATH) {
             query = `path:"${query.trim()}"`;
         }
