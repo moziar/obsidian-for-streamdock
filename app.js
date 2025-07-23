@@ -219,9 +219,9 @@ const SearchType = {
 }
 
 function noteFinder(data) {
-    const vault = encodeURIComponent(data.payload.settings.vault) || '';
+    const vault = encodeURIComponent(data.payload.settings.vault.trim()) || '';
     const type = data.payload.settings.type || SearchType.ALL;
-    let query = encodeURIComponent(data.payload.settings.query) || '';
+    let query = data.payload.settings.query || '';
     const property_key = data.payload.settings.property_key || '';
     const property_value = data.payload.settings.property_value || '';
     const status = data.payload.settings.status || SearchType.ANY;
@@ -238,12 +238,12 @@ function noteFinder(data) {
         prefix = getPrefixByType(switchType);
 
         if (switchType === SearchType.PROPERTY) {
-            query = encodeURIComponent(`[${property_key}:${property_value}]`);
         } else if (switchType === SearchType.PATH) {
-            query = `path:"${query}"`;
+            query = `path:"${query.trim()}"`;
         }
         
-        defaultUrl += `${prefix}${query}`;
+        // 在组合 URL 阶段进行编码，保证去除前后空格
+        defaultUrl += `${prefix}${encodeURIComponent(query.trim())}`;
 
         $SD.api.openUrl(data.context, defaultUrl);
         showOk(data.context);
