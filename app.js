@@ -7,6 +7,7 @@ function connected(jsn) {
     $SD.on('com.moz.obsidian-for-streamdock.web-viewer.keyDown', (jsonObj) => webViewer(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.web-searcher.keyDown', (jsonObj) => webSearcher(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.note-finder.keyDown', (jsonObj) => noteFinder(jsonObj));
+    $SD.on('com.moz.obsidian-for-streamdock.load-workspace.keyDown', (jsonObj) => loadWorkspace(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.switch-tab.dialRotate', (jsonObj) => switchTab(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.zoom.dialRotate', (jsonObj) => zoomInOut(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.zoom.dialDown', (jsonObj) => zoomReset(jsonObj));
@@ -243,6 +244,20 @@ function noteFinder(data) {
         }
         
         defaultUrl += `${prefix}${query}`;
+
+        $SD.api.openUrl(data.context, defaultUrl);
+        showOk(data.context);
+    }
+}
+
+function loadWorkspace(data) {
+    const vault = encodeURIComponent(data.payload.settings.vault.trim()) || '';
+    const workspace = encodeURIComponent(data.payload.settings.workspace.trim()) || '';
+
+    if ( !vault || !workspace ) {
+        showAlert(data.context);
+    } else {
+        defaultUrl = `obsidian://adv-uri?vault=${vault}&workspace=${workspace}`;
 
         $SD.api.openUrl(data.context, defaultUrl);
         showOk(data.context);

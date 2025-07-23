@@ -85,6 +85,20 @@
       ]
     },
     {
+      "UUID": "com.moz.obsidian-for-streamdock.load-workspace",
+      "Name": "Load Workspace",
+      "Tooltip": "加载 Workspace",
+      "PropertyInspectorPath": "propertyInspector/load-workspace.html",
+      "Icon": "images/load-workspace_action",
+      "States": [
+        {
+          "FontSize": "11",
+          "Title": "Workspace",
+          "Image": "images/load-workspace"
+        }
+      ]
+    },
+    {
       "UUID": "com.moz.obsidian-for-streamdock.switch-tab",
       "Name": "Switch Tab",
       "PropertyInspectorPath": "propertyInspector/switch-tab.html",
