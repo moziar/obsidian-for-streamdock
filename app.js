@@ -8,6 +8,7 @@ function connected(jsn) {
     $SD.on('com.moz.obsidian-for-streamdock.web-searcher.keyDown', (jsonObj) => webSearcher(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.note-finder.keyDown', (jsonObj) => noteFinder(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.load-workspace.keyDown', (jsonObj) => loadWorkspace(jsonObj));
+    $SD.on('com.moz.obsidian-for-streamdock.settings-navigator.keyDown', (jsonObj) => settingsNavigator(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.switch-tab.dialRotate', (jsonObj) => switchTab(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.zoom.dialRotate', (jsonObj) => zoomInOut(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.zoom.dialDown', (jsonObj) => zoomReset(jsonObj));
@@ -259,6 +260,19 @@ function loadWorkspace(data) {
         showAlert(data.context);
     } else {
         defaultUrl = `obsidian://adv-uri?vault=${vault}&workspace=${workspace}`;
+
+        $SD.api.openUrl(data.context, defaultUrl);
+        showOk(data.context);
+    }
+}
+function settingsNavigator(data) {
+    const vault = encodeURIComponent(data.payload.settings.vault.trim()) || '';
+    const plugin_id = encodeURIComponent(data.payload.settings.plugin_id.trim()) || '';
+
+    if ( !vault || !plugin_id ) {
+        showAlert(data.context);
+    } else {
+        defaultUrl = `obsidian://adv-uri?vault=${vault}&settingid=${plugin_id}`;
 
         $SD.api.openUrl(data.context, defaultUrl);
         showOk(data.context);
