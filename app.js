@@ -16,37 +16,77 @@ function connected(jsn) {
     $SD.on('com.moz.obsidian-for-streamdock.web-zoom.dialDown', (jsonObj) => webZoomReset(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.note-navigator.dialRotate', (jsonObj) => noteNavigator(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.note-navigator.dialDown', (jsonObj) => dailyNote(jsonObj));
-    $SD.on('com.moz.obsidian-for-streamdock.note-navigator.willAppear', (jsonObj) => updateNavigatorTitle(jsonObj));
-    $SD.on('com.moz.obsidian-for-streamdock.note-navigator.didReceiveSettings', (jsonObj) => updateNavigatorTitle(jsonObj));
-};
+    $SD.on('com.moz.obsidian-for-streamdock.note-navigator.willAppear', (jsonObj) => updateNoteNavigatorTitle(jsonObj));
+    $SD.on('com.moz.obsidian-for-streamdock.note-navigator.didReceiveSettings', (jsonObj) => updateNoteNavigatorTitle(jsonObj));
+}
 
+/**
+ * @param {{
+ *   context: string,
+ *   payload: {
+ *     settings: {
+ *     url?: string,
+ *     method?: string,
+ *     contentType?: string|null,
+ *     apikey?: string,
+ *     body?: string|null,
+ *     command?: string,
+ *     }
+ *   },
+ * }} data
+ */
 function runCommand(data) {
     const command = data.payload.settings.command || '';
     const defaultUrl = `http://127.0.0.1:27123/commands/${command}`;
     executeSimpleCommand(data, defaultUrl);
 }
 
+/**
+ * @param {{
+ *   context: string,
+ *   payload: {
+ *     settings: {
+ *       vault?: string,
+ *       notepath?: string,
+ *     }
+ *   },
+ * }} data
+ */
 function openNote(data) {
-    const notePath = data.payload.settings.notepath || '';
-    const encodedNotepath = encodeURIComponent(notePath);
-    const defaultUrl = `http://127.0.0.1:27123/open/${encodedNotepath}?newLeaf=true`;
-    executeSimpleCommand(data, defaultUrl);
+    const vault = encodeURIComponent(data.payload.settings.vault.trim()) || '';
+    const notePath = encodeURIComponent(data.payload.settings.notepath.trim()) || '';
+
+    if (!vault || !notePath) {
+        showAlert(data.context);
+    } else {
+        let defaultUrl = `obsidian://open?vault=${vault}&file=${notePath}`;
+
+        openUrl(data.context, defaultUrl);
+        showOk(data.context);
+    }
 }
 
+/**
+ * @param {{
+ *   context: string,
+ *   payload: {
+ *     settings: {
+ *       vault?: string,
+ *     }
+ *   },
+ * }} data
+ */
 function dailyNote(data) {
-    const noteType = data.payload.settings.noteType || NoteType.DAILY;
-    let url = '';
+    const vault = encodeURIComponent(data.payload.settings.vault.trim()) || '';
 
-    switch (noteType) {
-        case NoteType.WEEKLY:
-            url = 'http://127.0.0.1:27123/commands/periodic-notes:open-weekly-note';
-            break;
-        case NoteType.DAILY:
-        default:
-            url = 'http://127.0.0.1:27123/commands/daily-notes/';
-            break;
+    if (!vault) {
+        showAlert(data.context);
+    } else {
+        let defaultUrl = `obsidian://daily?vault=${vault}`;
+
+        openUrl(data.context, defaultUrl);
+        showOk(data.context);
     }
-    executeSimpleCommand(data, url);
 }
 
 function webViewer(data) {
@@ -77,15 +117,25 @@ function zoomReset(data) {
     executeSimpleCommand(data, 'http://127.0.0.1:27123/commands/window:reset-zoom');
 }
 
-function updateNavigatorTitle(data) {
-    const { context, payload } = data;
+/**
+ * @param {{
+ *   context: string,
+ *   payload: {
+ *     settings: {
+ *       noteType?: string|null,
+ *     }
+ *   },
+ * }} data
+ */
+function updateNoteNavigatorTitle(data) {
+    const {context, payload} = data;
     const settings = payload.settings;
     const noteType = settings.noteType || NoteType.DAILY;
     let title = 'Daily';
     if (noteType === NoteType.WEEKLY) {
         title = 'Weekly';
     }
-    $SD.api.setTitle(context, title);
+    setTitle(context, title);
 }
 
 const NoteType = {
@@ -96,11 +146,27 @@ const NoteType = {
     YEARLY: 'Yearly',
 };
 
+/**
+ * @param {{
+ *   context: string,
+ *   payload: {
+ *     settings: {
+ *       url?: string,
+ *       method?: string,
+ *       contentType?: string|null,
+ *       apikey?: string|null,
+ *       body?: string|null,
+ *       ticks?: string|null,
+*        noteType?: string|null,
+ *     }
+ *   },
+ * }} data
+ */
 function noteNavigator(data) {
     const noteType = data.payload.settings.noteType || NoteType.DAILY;
 
-    let nextCommand = '';
-    let prevCommand = '';
+    let nextCommand;
+    let prevCommand;
 
     switch (noteType) {
         case NoteType.WEEKLY:
@@ -157,7 +223,7 @@ function executeSimpleCommand(data, defaultUrl) {
     const newData = {
         context: data.context,
         payload: {
-            settings: { ...defaultSettings, ...data.payload.settings },
+            settings: {...defaultSettings, ...data.payload.settings},
         },
     };
 
@@ -180,9 +246,9 @@ function executeSimpleCommand(data, defaultUrl) {
  *   },
  * }} data
  * @param {string} positiveCommand - 正向命令URL（右转）
- * @param {string} negativeCommand - 负向命令URL（左转），可选
+ * @param {string|null} negativeCommand - 负向命令URL（左转），可选
  */
-function dialRotate(data, positiveCommand, negativeCommand = null) {
+function dialRotate(data, positiveCommand, negativeCommand) {
     let defaultSettings = {
         url: positiveCommand
     };
@@ -200,7 +266,7 @@ function dialRotate(data, positiveCommand, negativeCommand = null) {
     const newData = {
         context: data.context,
         payload: {
-            settings: { ...defaultSettings, ...data.payload.settings },
+            settings: {...defaultSettings, ...data.payload.settings},
         },
     };
 
@@ -219,6 +285,21 @@ const SearchType = {
     DONE: 'DoneTask'
 }
 
+/**
+ * @param {{
+ *   context: string,
+ *   payload: {
+ *     settings: {
+ *       vault?: string,
+ *       type?: string|null,
+ *       query?: string|null,
+ *       property_key?: string|null,
+ *       property_value?: string|null,
+ *       status?: string|null
+ *     }
+ *   },
+ * }} data
+ */
 function noteFinder(data) {
     const vault = encodeURIComponent(data.payload.settings.vault.trim()) || '';
     const type = data.payload.settings.type || SearchType.ALL;
@@ -232,54 +313,66 @@ function noteFinder(data) {
         switchType = status;
     }
 
-    if ( !vault ) {
-        showAlert(data.context);
-    } else {
-        let defaultUrl = `obsidian://search?vault=${vault}&query=`;
-        prefix = getPrefixByType(switchType);
+    let defaultUrl = `obsidian://search?vault=${vault}&query=`;
+    let prefix = getPrefixByType(switchType);
 
-        if (switchType === SearchType.PROPERTY) {
-            query = `[${property_key.trim()}:${property_value.trim()}]`;
-        } else if (switchType === SearchType.PATH) {
-            query = `path:"${query.trim()}"`;
-        }
-        
-        // 在组合 URL 阶段进行编码，保证去除前后空格
-        defaultUrl += `${prefix}${encodeURIComponent(query.trim())}`;
-
-        $SD.api.openUrl(data.context, defaultUrl);
-        showOk(data.context);
+    if (switchType === SearchType.PROPERTY) {
+        query = `[${property_key.trim()}:${property_value.trim()}]`;
+    } else if (switchType === SearchType.PATH) {
+        query = `path:"${query.trim()}"`;
     }
+
+    // 在组合 URL 阶段进行编码，保证去除前后空格
+    defaultUrl += `${prefix}${encodeURIComponent(query.trim())}`;
+
+    openUrl(data.context, defaultUrl);
+    showOk(data.context);
 }
 
+/**
+ * @param {{
+ *   context: string,
+ *   payload: {
+ *     settings: {
+ *       vault?: string,
+ *       workspace?: string
+ *     }
+ *   },
+ * }} data
+ */
 function loadWorkspace(data) {
     const vault = encodeURIComponent(data.payload.settings.vault.trim()) || '';
     const workspace = encodeURIComponent(data.payload.settings.workspace.trim()) || '';
 
-    if ( !vault || !workspace ) {
-        showAlert(data.context);
-    } else {
-        defaultUrl = `obsidian://adv-uri?vault=${vault}&workspace=${workspace}`;
+    let defaultUrl = `obsidian://adv-uri?vault=${vault}&workspace=${workspace}`;
 
-        $SD.api.openUrl(data.context, defaultUrl);
-        showOk(data.context);
-    }
+    openUrl(data.context, defaultUrl);
+    showOk(data.context);
 }
+
+/**
+ * @param {{
+ *   context: string,
+ *   payload: {
+ *     settings: {
+ *       vault?: string,
+ *       plugin_id?: string
+ *     }
+ *   },
+ * }} data
+ */
 function settingsNavigator(data) {
     const vault = encodeURIComponent(data.payload.settings.vault.trim()) || '';
     const plugin_id = encodeURIComponent(data.payload.settings.plugin_id.trim()) || '';
 
-    if ( !vault || !plugin_id ) {
-        showAlert(data.context);
-    } else {
-        defaultUrl = `obsidian://adv-uri?vault=${vault}&settingid=${plugin_id}`;
+    let defaultUrl = `obsidian://adv-uri?vault=${vault}&settingid=${plugin_id}`;
 
-        $SD.api.openUrl(data.context, defaultUrl);
-        showOk(data.context);
-    }
+    openUrl(data.context, defaultUrl);
+    showOk(data.context);
 }
 
-function getPrefixByType(type){
+function getPrefixByType(type) {
+    let prefix = '';
     switch (type) {
         case SearchType.ALL:
         default:
@@ -324,11 +417,11 @@ function sendHttp(data) {
     const contentType = 'application/json';
     const headers = `Authorization: Bearer ${data.payload.settings.apikey || ''}`;
     const body = '';
-    
+
     // log('sendHttp', { url, method, contentType, headers, body });
 
     let defaultHeaders = contentType ? {
-        'Content-Type':  contentType
+        'Content-Type': contentType
     } : {};
     let inputHeaders = {};
 
@@ -402,6 +495,22 @@ function onOpen(ws) {
  */
 function onClose(ws, evt) {
     log(`Connection to ${ws.url} closed:`, evt.code, evt.reason);
+}
+
+/**
+ * @param {string} context
+ * @param {string} title
+ */
+function setTitle(context, title) {
+    $SD.api.setTitle(context, title);
+}
+
+/**
+ * @param {string} context
+ * @param {string} url
+ */
+function openUrl(context, url) {
+    $SD.api.openUrl(context, url);
 }
 
 /**
