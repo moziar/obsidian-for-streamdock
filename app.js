@@ -15,7 +15,7 @@ function connected(jsn) {
     $SD.on('com.moz.obsidian-for-streamdock.web-zoom.dialRotate', (jsonObj) => webZoomInOut(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.web-zoom.dialDown', (jsonObj) => webZoomReset(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.note-navigator.dialRotate', (jsonObj) => noteNavigator(jsonObj));
-    $SD.on('com.moz.obsidian-for-streamdock.note-navigator.dialDown', (jsonObj) => dailyNote(jsonObj));
+    $SD.on('com.moz.obsidian-for-streamdock.note-navigator.dialDown', (jsonObj) => noteNavigatorToCurrent(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.note-navigator.willAppear', (jsonObj) => updateNoteNavigatorTitle(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.note-navigator.didReceiveSettings', (jsonObj) => updateNoteNavigatorTitle(jsonObj));
 }
@@ -87,6 +87,37 @@ function dailyNote(data) {
         openUrl(data.context, defaultUrl);
         showOk(data.context);
     }
+}
+
+/**
+ * @param {{
+ *   context: string,
+ *     payload: {
+ *     settings: {
+ *       url?: string,
+ *       method?: string,
+ *       contentType?: string|null,
+ *       apikey?: string|null,
+ *       body?: string|null,
+ *       noteType?: string|null
+ *       }
+ *   },
+ * }} data
+ */
+function noteNavigatorToCurrent(data) {
+    const noteType = data.payload.settings.noteType || NoteType.DAILY;
+    let url = '';
+
+    switch (noteType) {
+        case NoteType.WEEKLY:
+            url = 'http://127.0.0.1:27123/commands/periodic-notes:open-weekly-note';
+            break;
+        case NoteType.DAILY:
+        default:
+            url = 'http://127.0.0.1:27123/commands/daily-notes/';
+            break;
+            }
+            executeSimpleCommand(data, url);
 }
 
 function webViewer(data) {
