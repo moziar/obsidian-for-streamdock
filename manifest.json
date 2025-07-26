@@ -29,6 +29,20 @@
       ]
     },
     {
+      "UUID": "com.moz.obsidian-for-streamdock.open-vault",
+      "Name": "Open Vault",
+      "Tooltip": "打开笔记库",
+      "PropertyInspectorPath": "propertyInspector/open-vault.html",
+      "Icon": "images/open-vault_action",
+      "States": [
+        {
+          "FontSize": "11",
+          "Title": "Open Vault",
+          "Image": "images/open-vault"
+        }
+      ]
+    },
+    {
       "UUID": "com.moz.obsidian-for-streamdock.note-finder",
       "Name": "Note Finder",
       "Tooltip": "搜索笔记",

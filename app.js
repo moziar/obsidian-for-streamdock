@@ -3,6 +3,7 @@ $SD.on('connected', (jsonObj) => connected(jsonObj));
 function connected(jsn) {
     $SD.on('com.moz.obsidian-for-streamdock.run-command.keyDown', (jsonObj) => runCommand(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.open-note.keyDown', (jsonObj) => openNote(jsonObj));
+    $SD.on('com.moz.obsidian-for-streamdock.open-vault.keyDown', (jsonObj) => openVault(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.daily-note.keyDown', (jsonObj) => dailyNote(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.web-viewer.keyDown', (jsonObj) => webViewer(jsonObj));
     $SD.on('com.moz.obsidian-for-streamdock.web-searcher.keyDown', (jsonObj) => webSearcher(jsonObj));
@@ -47,23 +48,40 @@ function runCommand(data) {
  *   payload: {
  *     settings: {
  *       vault?: string,
+ *     }
+ *   },
+ * }} data
+ */
+function openVault(data) {
+    let defaultUrl = getVaultUrl(data);
+
+    openUrl(data.context, defaultUrl);
+    showOk(data.context);
+}
+
+/**
+ * @param {{
+ *   context: string,
+ *   payload: {
+ *     settings: {
+ *       vault?: string,
  *       notepath?: string,
  *     }
  *   },
  * }} data
  */
 function openNote(data) {
-    const vault = encodeURIComponent(data.payload.settings.vault.trim()) || '';
     const notePath = encodeURIComponent(data.payload.settings.notepath.trim()) || '';
 
-    if (!vault || !notePath) {
-        showAlert(data.context);
-    } else {
-        let defaultUrl = `obsidian://open?vault=${vault}&file=${notePath}`;
+    let defaultUrl = getVaultUrl(data);
+    defaultUrl += `&file=${notePath}`;
 
-        openUrl(data.context, defaultUrl);
-        showOk(data.context);
-    }
+    openUrl(data.context, defaultUrl);
+    showOk(data.context);
+}
+
+function getVaultUrl(data) {
+    return `obsidian://open?vault=${encodeURIComponent(data.payload.settings.vault.trim())}`;
 }
 
 /**
