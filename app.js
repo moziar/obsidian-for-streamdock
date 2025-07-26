@@ -1,24 +1,30 @@
 $SD.on('connected', (jsonObj) => connected(jsonObj));
 
 function connected(jsn) {
-    $SD.on('com.moz.obsidian-for-streamdock.run-command.keyDown', (jsonObj) => runCommand(jsonObj));
-    $SD.on('com.moz.obsidian-for-streamdock.open-note.keyDown', (jsonObj) => openNote(jsonObj));
-    $SD.on('com.moz.obsidian-for-streamdock.open-vault.keyDown', (jsonObj) => openVault(jsonObj));
-    $SD.on('com.moz.obsidian-for-streamdock.daily-note.keyDown', (jsonObj) => dailyNote(jsonObj));
-    $SD.on('com.moz.obsidian-for-streamdock.web-viewer.keyDown', (jsonObj) => webViewer(jsonObj));
-    $SD.on('com.moz.obsidian-for-streamdock.web-searcher.keyDown', (jsonObj) => webSearcher(jsonObj));
-    $SD.on('com.moz.obsidian-for-streamdock.note-finder.keyDown', (jsonObj) => noteFinder(jsonObj));
-    $SD.on('com.moz.obsidian-for-streamdock.load-workspace.keyDown', (jsonObj) => loadWorkspace(jsonObj));
-    $SD.on('com.moz.obsidian-for-streamdock.settings-navigator.keyDown', (jsonObj) => settingsNavigator(jsonObj));
-    $SD.on('com.moz.obsidian-for-streamdock.switch-tab.dialRotate', (jsonObj) => switchTab(jsonObj));
-    $SD.on('com.moz.obsidian-for-streamdock.zoom.dialRotate', (jsonObj) => zoomInOut(jsonObj));
-    $SD.on('com.moz.obsidian-for-streamdock.zoom.dialDown', (jsonObj) => zoomReset(jsonObj));
-    $SD.on('com.moz.obsidian-for-streamdock.web-zoom.dialRotate', (jsonObj) => webZoomInOut(jsonObj));
-    $SD.on('com.moz.obsidian-for-streamdock.web-zoom.dialDown', (jsonObj) => webZoomReset(jsonObj));
-    $SD.on('com.moz.obsidian-for-streamdock.note-navigator.dialRotate', (jsonObj) => noteNavigator(jsonObj));
-    $SD.on('com.moz.obsidian-for-streamdock.note-navigator.dialDown', (jsonObj) => noteNavigatorToCurrent(jsonObj));
-    $SD.on('com.moz.obsidian-for-streamdock.note-navigator.willAppear', (jsonObj) => updateNoteNavigatorTitle(jsonObj));
-    $SD.on('com.moz.obsidian-for-streamdock.note-navigator.didReceiveSettings', (jsonObj) => updateNoteNavigatorTitle(jsonObj));
+    const events = [
+        { event: 'com.moz.obsidian-for-streamdock.run-command.keyDown', handler: runCommand },
+        { event: 'com.moz.obsidian-for-streamdock.open-note.keyDown', handler: openNote },
+        { event: 'com.moz.obsidian-for-streamdock.open-vault.keyDown', handler: openVault },
+        { event: 'com.moz.obsidian-for-streamdock.daily-note.keyDown', handler: dailyNote },
+        { event: 'com.moz.obsidian-for-streamdock.web-viewer.keyDown', handler: webViewer },
+        { event: 'com.moz.obsidian-for-streamdock.web-searcher.keyDown', handler: webSearcher },
+        { event: 'com.moz.obsidian-for-streamdock.note-finder.keyDown', handler: noteFinder },
+        { event: 'com.moz.obsidian-for-streamdock.load-workspace.keyDown', handler: loadWorkspace },
+        { event: 'com.moz.obsidian-for-streamdock.settings-navigator.keyDown', handler: settingsNavigator },
+        { event: 'com.moz.obsidian-for-streamdock.switch-tab.dialRotate', handler: switchTab },
+        { event: 'com.moz.obsidian-for-streamdock.zoom.dialRotate', handler: zoomInOut },
+        { event: 'com.moz.obsidian-for-streamdock.zoom.dialDown', handler: zoomReset },
+        { event: 'com.moz.obsidian-for-streamdock.web-zoom.dialRotate', handler: webZoomInOut },
+        { event: 'com.moz.obsidian-for-streamdock.web-zoom.dialDown', handler: webZoomReset },
+        { event: 'com.moz.obsidian-for-streamdock.note-navigator.dialRotate', handler: noteNavigator },
+        { event: 'com.moz.obsidian-for-streamdock.note-navigator.dialDown', handler: noteNavigatorToCurrent },
+        { event: 'com.moz.obsidian-for-streamdock.note-navigator.willAppear', handler: updateNoteNavigatorTitle },
+        { event: 'com.moz.obsidian-for-streamdock.note-navigator.didReceiveSettings', handler: updateNoteNavigatorTitle }
+    ];
+
+    events.forEach(event => {
+        $SD.on(event.event, (jsonObj) => event.handler(jsonObj));
+    });
 }
 
 /**
@@ -54,9 +60,7 @@ function runCommand(data) {
  */
 function openVault(data) {
     let defaultUrl = getVaultUrl(data);
-
-    openUrl(data.context, defaultUrl);
-    showOk(data.context);
+    openUrlAndShowOk(data.context,defaultUrl);
 }
 
 /**
@@ -65,23 +69,28 @@ function openVault(data) {
  *   payload: {
  *     settings: {
  *       vault?: string,
- *       notepath?: string,
+ *       note_path?: string,
  *     }
  *   },
  * }} data
  */
 function openNote(data) {
-    const notePath = encodeURIComponent(data.payload.settings.notepath.trim()) || '';
+    const notePath = encodeURIComponent(data.payload.settings.note_path.trim()) || '';
 
     let defaultUrl = getVaultUrl(data);
     defaultUrl += `&file=${notePath}`;
 
-    openUrl(data.context, defaultUrl);
-    showOk(data.context);
+    openUrlAndShowOk(data.context,defaultUrl);
 }
 
 function getVaultUrl(data) {
-    return `obsidian://open?vault=${encodeURIComponent(data.payload.settings.vault.trim())}`;
+    const vault = data.payload.settings.vault;
+    if ( !vault ){
+        log('getVaultUrl(): vault name required.')
+        showAlert(data.context);
+    } else {
+        return `obsidian://open?vault=${encodeURIComponent(vault.trim())}`;
+    }
 }
 
 /**
@@ -102,8 +111,7 @@ function dailyNote(data) {
     } else {
         let defaultUrl = `obsidian://daily?vault=${vault}`;
 
-        openUrl(data.context, defaultUrl);
-        showOk(data.context);
+        openUrlAndShowOk(data.context,defaultUrl);
     }
 }
 
@@ -117,13 +125,13 @@ function dailyNote(data) {
  *       contentType?: string|null,
  *       apikey?: string|null,
  *       body?: string|null,
- *       noteType?: string|null
+ *       note_type?: string|null
  *       }
  *   },
  * }} data
  */
 function noteNavigatorToCurrent(data) {
-    const noteType = data.payload.settings.noteType || NoteType.DAILY;
+    const noteType = data.payload.settings.note_type || NoteType.DAILY;
     let url = '';
 
     switch (noteType) {
@@ -134,8 +142,9 @@ function noteNavigatorToCurrent(data) {
         default:
             url = 'http://127.0.0.1:27123/commands/daily-notes/';
             break;
-            }
-            executeSimpleCommand(data, url);
+    }
+
+    executeSimpleCommand(data, url);
 }
 
 function webViewer(data) {
@@ -171,7 +180,7 @@ function zoomReset(data) {
  *   context: string,
  *   payload: {
  *     settings: {
- *       noteType?: string|null,
+ *       note_type?: string|null,
  *     }
  *   },
  * }} data
@@ -179,7 +188,7 @@ function zoomReset(data) {
 function updateNoteNavigatorTitle(data) {
     const {context, payload} = data;
     const settings = payload.settings;
-    const noteType = settings.noteType || NoteType.DAILY;
+    const noteType = settings.note_type || NoteType.DAILY;
     let title = 'Daily';
     if (noteType === NoteType.WEEKLY) {
         title = 'Weekly';
@@ -206,13 +215,13 @@ const NoteType = {
  *       apikey?: string|null,
  *       body?: string|null,
  *       ticks?: string|null,
-*        noteType?: string|null,
+ *       note_type?: string|null,
  *     }
  *   },
  * }} data
  */
 function noteNavigator(data) {
-    const noteType = data.payload.settings.noteType || NoteType.DAILY;
+    const noteType = data.payload.settings.note_type || NoteType.DAILY;
 
     let nextCommand;
     let prevCommand;
@@ -246,6 +255,11 @@ function webZoomInOut(data) {
 
 function webZoomReset(data) {
     executeSimpleCommand(data, 'http://127.0.0.1:27123/commands/webviewer:zoom-reset');
+}
+
+function openUrlAndShowOk(context, url) {
+    openUrl(context, url);
+    showOk(context);
 }
 
 /**
@@ -374,8 +388,7 @@ function noteFinder(data) {
     // 在组合 URL 阶段进行编码，保证去除前后空格
     defaultUrl += `${prefix}${encodeURIComponent(query.trim())}`;
 
-    openUrl(data.context, defaultUrl);
-    showOk(data.context);
+    openUrlAndShowOk(data.context,defaultUrl);
 }
 
 /**
@@ -395,8 +408,7 @@ function loadWorkspace(data) {
 
     let defaultUrl = `obsidian://adv-uri?vault=${vault}&workspace=${workspace}`;
 
-    openUrl(data.context, defaultUrl);
-    showOk(data.context);
+    openUrlAndShowOk(data.context,defaultUrl);
 }
 
 /**
@@ -416,8 +428,7 @@ function settingsNavigator(data) {
 
     let defaultUrl = `obsidian://adv-uri?vault=${vault}&settingid=${plugin_id}`;
 
-    openUrl(data.context, defaultUrl);
-    showOk(data.context);
+    openUrlAndShowOk(data.context,defaultUrl);
 }
 
 function getPrefixByType(type) {
