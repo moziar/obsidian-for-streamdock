@@ -10,6 +10,10 @@
     "Name": "Open Note",
     "Tooltip": "打开笔记"
   },
+  "com.moz.obsidian-for-streamdock.open-vault": {
+    "Name": "Open Vault",
+    "Tooltip": "打开笔记库"
+  },
   "com.moz.obsidian-for-streamdock.note-finder": {
     "Name": "Note Finder",
     "Tooltip": "搜索笔记"
@@ -25,6 +29,14 @@
   "com.moz.obsidian-for-streamdock.web-searcher": {
     "Name": "Web Searcher",
     "Tooltip": "打开网络搜索"
+  },
+  "com.moz.obsidian-for-streamdock.load-workspace": {
+    "Name": "Load Workspace",
+    "Tooltip": "加载 Workspace"
+  },
+  "com.moz.obsidian-for-streamdock.settings-navigator": {
+    "Name": "Settings Navigator",
+    "Tooltip": "插件设置页导航"
   },
   "com.moz.obsidian-for-streamdock.switch-tab": {
     "Name": "Switch Tab",

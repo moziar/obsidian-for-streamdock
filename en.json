@@ -10,6 +10,10 @@
     "Name": "Open Note",
     "Tooltip": "Open specific Obsidian Note"
   },
+  "com.moz.obsidian-for-streamdock.open-vault": {
+    "Name": "Open Vault",
+    "Tooltip": "Open Obsidian Vault"
+  },
   "com.moz.obsidian-for-streamdock.note-finder": {
     "Name": "Note Finder",
     "Tooltip": "Search for notes"
@@ -25,6 +29,14 @@
   "com.moz.obsidian-for-streamdock.web-searcher": {
     "Name": "Web Searcher",
     "Tooltip": "Search the web"
+  },
+  "com.moz.obsidian-for-streamdock.load-workspace": {
+    "Name": "Load Workspace",
+    "Tooltip": "Load specific Obsidian Workspace"
+  },
+  "com.moz.obsidian-for-streamdock.settings-navigator": {
+    "Name": "Settings Navigator",
+    "Tooltip": "Open specific plugin setting page"
   },
   "com.moz.obsidian-for-streamdock.switch-tab": {
     "Name": "Switch Tab",
