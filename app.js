@@ -60,7 +60,7 @@ function runCommand(data) {
  */
 function openVault(data) {
     let defaultUrl = getVaultUrl(data);
-    openUrlAndShowOk(data.context,defaultUrl);
+    openUrlAndShowOk(data,defaultUrl);
 }
 
 /**
@@ -75,18 +75,24 @@ function openVault(data) {
  * }} data
  */
 function openNote(data) {
-    const notePath = encodeURIComponent(data.payload.settings.note_path.trim()) || '';
+    const notePath = data.payload.settings.note_path || '';
+
+    if (!notePath) {
+        showAlert(data.context);
+        return;
+    }
+
+    const encodedNotePath = encodeURIComponent(notePath.trim());
 
     let defaultUrl = getVaultUrl(data);
-    defaultUrl += `&file=${notePath}`;
+    defaultUrl += `&file=${encodedNotePath}`;
 
-    openUrlAndShowOk(data.context,defaultUrl);
+    openUrlAndShowOk(data, defaultUrl);
 }
 
 function getVaultUrl(data) {
     const vault = data.payload.settings.vault;
     if ( !vault ){
-        log('getVaultUrl(): vault name required.')
         showAlert(data.context);
     } else {
         return `obsidian://open?vault=${encodeURIComponent(vault.trim())}`;
@@ -104,15 +110,16 @@ function getVaultUrl(data) {
  * }} data
  */
 function dailyNote(data) {
-    const vault = encodeURIComponent(data.payload.settings.vault.trim()) || '';
+    const vault = data.payload.settings.vault || '';
 
     if (!vault) {
         showAlert(data.context);
-    } else {
-        let defaultUrl = `obsidian://daily?vault=${vault}`;
-
-        openUrlAndShowOk(data.context,defaultUrl);
+        return;
     }
+
+    const encodedVault = encodeURIComponent(vault.trim());
+    let defaultUrl = `obsidian://daily?vault=${encodedVault}`;
+    openUrlAndShowOk(data, defaultUrl);
 }
 
 /**
@@ -257,9 +264,15 @@ function webZoomReset(data) {
     executeSimpleCommand(data, 'http://127.0.0.1:27123/commands/webviewer:zoom-reset');
 }
 
-function openUrlAndShowOk(context, url) {
-    openUrl(context, url);
-    showOk(context);
+function openUrlAndShowOk(data, url) {
+    // 这里会对所有 URI 类操作进行统一的非空判断
+    if (!data.payload.settings.vault) {
+        showAlert(data.context);
+        return;
+    }
+    
+    openUrl(data.context, url);
+    showOk(data.context);
 }
 
 /**
@@ -364,12 +377,17 @@ const SearchType = {
  * }} data
  */
 function noteFinder(data) {
-    const vault = encodeURIComponent(data.payload.settings.vault.trim()) || '';
+    const vault = data.payload.settings.vault || '';
     const type = data.payload.settings.type || SearchType.ALL;
     let query = data.payload.settings.query || '';
     const property_key = data.payload.settings.property_key || '';
     const property_value = data.payload.settings.property_value || '';
     const status = data.payload.settings.status || SearchType.ANY;
+
+    if (!vault){
+        showAlert(data.context);
+        return;
+    }
 
     let switchType = type;
     if (type === SearchType.TASK) {
@@ -380,15 +398,28 @@ function noteFinder(data) {
     let prefix = getPrefixByType(switchType);
 
     if (switchType === SearchType.PROPERTY) {
+        if (!property_key || !property_value){
+            showAlert(data.context);
+            return;
+        }
         query = `[${property_key.trim()}:${property_value.trim()}]`;
-    } else if (switchType === SearchType.PATH) {
-        query = `path:"${query.trim()}"`;
+    } else {
+        if (!query){
+            showAlert(data.context);
+            return;
+        }
+
+        // path 场景需要使用 exactly match
+        if (switchType === SearchType.PATH) {
+            query = `path:"${query.trim()}"`;
+        }
     }
 
     // 在组合 URL 阶段进行编码，保证去除前后空格
-    defaultUrl += `${prefix}${encodeURIComponent(query.trim())}`;
+    const encodedQuery = encodeURIComponent(query.trim());
+    defaultUrl += `${prefix}${encodedQuery}`;
 
-    openUrlAndShowOk(data.context,defaultUrl);
+    openUrlAndShowOk(data,defaultUrl);
 }
 
 /**
@@ -403,12 +434,19 @@ function noteFinder(data) {
  * }} data
  */
 function loadWorkspace(data) {
-    const vault = encodeURIComponent(data.payload.settings.vault.trim()) || '';
-    const workspace = encodeURIComponent(data.payload.settings.workspace.trim()) || '';
+    const vault = data.payload.settings.vault || '';
+    const workspace = data.payload.settings.workspace || '';
 
-    let defaultUrl = `obsidian://adv-uri?vault=${vault}&workspace=${workspace}`;
+    if (!vault || !workspace) {
+        showAlert(data.context);
+        return;
+    }
 
-    openUrlAndShowOk(data.context,defaultUrl);
+    const encodedVault = encodeURIComponent(vault.trim());
+    const encodedWorkspace = encodeURIComponent(workspace.trim());
+
+    let defaultUrl = `obsidian://adv-uri?vault=${encodedVault}&workspace=${encodedWorkspace}`;
+    openUrlAndShowOk(data,defaultUrl);
 }
 
 /**
@@ -423,12 +461,20 @@ function loadWorkspace(data) {
  * }} data
  */
 function settingsNavigator(data) {
-    const vault = encodeURIComponent(data.payload.settings.vault.trim()) || '';
-    const plugin_id = encodeURIComponent(data.payload.settings.plugin_id.trim()) || '';
+    const vault = data.payload.settings.vault || '';
+    const plugin_id = data.payload.settings.plugin_id || '';
 
-    let defaultUrl = `obsidian://adv-uri?vault=${vault}&settingid=${plugin_id}`;
+    if (!vault || !plugin_id) {
+        showAlert(data.context);
+        return;
+    }
 
-    openUrlAndShowOk(data.context,defaultUrl);
+    const encodedVault = encodeURIComponent(vault.trim());
+    const encodedPluginId = encodeURIComponent(plugin_id.trim());
+
+    let defaultUrl = `obsidian://adv-uri?vault=${encodedVault}&settingid=${encodedPluginId}`;
+
+    openUrlAndShowOk(data,defaultUrl);
 }
 
 function getPrefixByType(type) {
