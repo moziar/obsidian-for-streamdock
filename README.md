@@ -1,3 +1,5 @@
+![](demo.png)
+
 A StreamDock plugin which could help you open notes, run obsidian commands, search notes, switch tabs or navigate through daily and weekly notes by date. 
 
 
