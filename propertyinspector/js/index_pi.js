@@ -107,14 +107,23 @@ const updateUI = (pl) => {
     Object.keys(pl).map(e => {
         if (e && e != '') {
             const foundElement = document.querySelector(`#${e}`);
-            console.log(`searching for: #${e}`, 'found:', foundElement);
             if (foundElement && foundElement.type !== 'file') {
-                foundElement.value = pl[e];
-                const maxl = foundElement.getAttribute('maxlength') || 50;
-                const labels = document.querySelectorAll(`[for='${foundElement.id}']`);
-                if (labels.length) {
-                    for (let x of labels) {
-                        x.textContent = maxl ? `${foundElement.value.length}/${maxl}` : `${foundElement.value.length}`;
+                // 特殊处理 checkbox 类型的元素
+                if (foundElement.type === 'checkbox') {
+                    // 直接使用布尔值设置 checked 状态
+                    foundElement.checked = Boolean(pl[e]);
+                    // 确保字符串 'false' 也被正确处理为 false
+                    if (pl[e] === 'false') {
+                        foundElement.checked = false;
+                    }
+                } else {
+                    foundElement.value = pl[e];
+                    const maxl = foundElement.getAttribute('maxlength') || 50;
+                    const labels = document.querySelectorAll(`[for='${foundElement.id}']`);
+                    if (labels.length) {
+                        for (let x of labels) {
+                            x.textContent = maxl ? `${foundElement.value.length}/${maxl}` : `${foundElement.value.length}`;
+                        }
                     }
                 }
             }
@@ -334,7 +343,7 @@ function prepareDOMElements(baseElement) {
         }
     });
 
-    baseElement.querySelectorAll('[data-open-url').forEach(e => {
+    baseElement.querySelectorAll('[data-open-url]').forEach(e => {
         const value = e.getAttribute('data-open-url');
         if (value) {
             e.onclick = () => {
@@ -408,7 +417,7 @@ function handleSdpiItemChange(e, idx) {
     }
 
     if (sdpiItemChildren.length && ['radio','checkbox'].includes(sdpiItemChildren[0].type)) {
-        e.setAttribute('_value', e.checked); //'_value' has priority over .value
+        e.setAttribute('_value', e.checked);
     }
     if (sdpiItemGroup && !sdpiItemChildren.length) {
         for (let x of ['input', 'meter', 'progress']) {
@@ -431,22 +440,32 @@ function handleSdpiItemChange(e, idx) {
         });
     }
 
+    // 构建 returnValue 对象，确保 checkbox 的值正确处理
+    let value;
+    
+    if (isList) {
+        value = e.textContent;
+    } else if (e.type === 'checkbox') {
+        // 对于 checkbox，直接使用 checked 布尔值作为值
+        value = e.checked;
+    } else if (e.hasAttribute('_value')) {
+        value = e.getAttribute('_value');
+    } else if (e.value) {
+        value = e.type === 'file' ? decodeURIComponent(e.value.replace(/^C:\\fakepath\\/, '')) : e.value;
+    } else {
+        value = e.getAttribute('value');
+    }
+    
     const returnValue = {
         key: e.id && e.id.charAt(0) !== '_' ? e.id : sdpiItem.id,
-        value: isList
-            ? e.textContent
-            : e.hasAttribute('_value')
-            ? e.getAttribute('_value')
-            : e.value
-            ? e.type === 'file'
-                ? decodeURIComponent(e.value.replace(/^C:\\fakepath\\/, ''))
-                : e.value
-            : e.getAttribute('value'),
+        value: value,
         group: sdpiItemGroup ? sdpiItemGroup.id : false,
         index: idx,
         selection: selectedElements,
         checked: e.checked
     };
+    
+
 
     /** Just simulate the original file-selector:
      * If there's an element of class '.sdpi-file-info'

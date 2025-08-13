@@ -11,10 +11,27 @@
 </head>
 
 <body>
+  <div class="sdpi-wrapper">
     <div type="textarea" class="sdpi-item" title="Enter the vault name">
       <div class="sdpi-item-label" data-localize="Vault Name">Vault</div>
       <input class="sdpi-item-value" type="text" id="vault" value="" required>
     </div>
+
+    <div type="checkbox" class="sdpi-item" id="single_check">
+        <div class="sdpi-item-label">Auto Mode</div>
+        <div class="sdpi-item-value">
+            <input id="auto_mode" type="checkbox">
+            <label for="auto_mode"><span></span>Enable</label>
+        </div>
+    </div>
+
+      <div class="sdpi-heading">Support</div>
+      <div>
+          On Auto Mode, the plugin will open daily note in new pane, and focus on it if it's already opened. <br>
+          <br>
+          Please install the companion <a data-open-url="https://obsidian.md/plugins?id=obsidian-advanced-uri">Obsidian Advanced URI plugin</a> to make Auto Mode work!<br>
+      </div>
+  </div>
 
   <div class="sdpi-info-label hidden" style="top: -1000;" value=""></div>
 

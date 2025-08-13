@@ -105,6 +105,7 @@ function getVaultUrl(data) {
  *   payload: {
  *     settings: {
  *       vault?: string,
+ *       auto_mode?: string
  *     }
  *   },
  * }} data
@@ -119,6 +120,15 @@ function dailyNote(data) {
 
     const encodedVault = encodeURIComponent(vault.trim());
     let defaultUrl = `obsidian://daily?vault=${encodedVault}`;
+    const autoMode = data.payload.settings.auto_mode;
+    
+    // 直接使用布尔值检查
+    if (autoMode === false) {
+        // 使用默认的 obsidian://daily 协议
+    } else if (autoMode === true) {
+        defaultUrl = `obsidian://adv-uri?vault=${encodedVault}&daily=true&openmode=true`;
+    }
+
     openUrlAndShowOk(data, defaultUrl);
 }
 
