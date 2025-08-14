@@ -59,7 +59,16 @@ function runCommand(data) {
  * }} data
  */
 function openVault(data) {
-    let defaultUrl = getVaultUrl(data);
+    const vault = data.payload.settings.vault;
+
+    if (!vault) {
+        showAlert(data.context);
+        return;
+    }
+
+    const encodedVault = encodeURIComponent(vault.trim());
+    let defaultUrl = `obsidian://open?vault=${encodedVault}`;
+
     openUrlAndShowOk(data,defaultUrl);
 }
 
@@ -105,15 +114,6 @@ function openNote(data) {
     }
 
     openUrlAndShowOk(data, defaultUrl);
-}
-
-function getVaultUrl(data) {
-    const vault = data.payload.settings.vault;
-    if ( !vault ){
-        showAlert(data.context);
-    } else {
-        return `obsidian://open?vault=${encodeURIComponent(vault.trim())}`;
-    }
 }
 
 /**
