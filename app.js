@@ -68,24 +68,41 @@ function openVault(data) {
  *   context: string,
  *   payload: {
  *     settings: {
- *       vault?: string,
- *       note_path?: string,
+ *     vault?: string,
+ *     note_path?: string,
+ *     auto_mode?: boolean
  *     }
  *   },
  * }} data
  */
 function openNote(data) {
+    const vault = data.payload.settings.vault;
     const notePath = data.payload.settings.note_path || '';
+    const autoMode = data.payload.settings.auto_mode;
 
-    if (!notePath) {
+    if (!notePath || !vault) {
         showAlert(data.context);
         return;
     }
 
+    const encodedVault = encodeURIComponent(vault.trim());
     const encodedNotePath = encodeURIComponent(notePath.trim());
 
-    let defaultUrl = getVaultUrl(data);
-    defaultUrl += `&file=${encodedNotePath}`;
+    let defaultUrl = `obsidian://open?vault=${encodedVault}&file=${encodedNotePath}`
+
+    if (autoMode === false) {
+        // 使用默认的 obsidian://open 协议
+    } else if (autoMode === true) {
+        // 区分路径和文件名
+        // 如果包含路径分隔符，认为是路径；否则认为是文件名
+        if (notePath.includes('/') || notePath.includes('\\')) {
+            // 使用 filepath 参数
+            defaultUrl = `obsidian://adv-uri?vault=${encodedVault}&filepath=${encodedNotePath}&openmode=true`;
+        } else {
+            // 使用 filename 参数
+            defaultUrl = `obsidian://adv-uri?vault=${encodedVault}&filename=${encodedNotePath}&openmode=true`;
+        }
+    }
 
     openUrlAndShowOk(data, defaultUrl);
 }
@@ -105,13 +122,14 @@ function getVaultUrl(data) {
  *   payload: {
  *     settings: {
  *       vault?: string,
- *       auto_mode?: string
+ *       auto_mode?: boolean
  *     }
  *   },
  * }} data
  */
 function dailyNote(data) {
     const vault = data.payload.settings.vault || '';
+    const autoMode = data.payload.settings.auto_mode;
 
     if (!vault) {
         showAlert(data.context);
@@ -120,7 +138,6 @@ function dailyNote(data) {
 
     const encodedVault = encodeURIComponent(vault.trim());
     let defaultUrl = `obsidian://daily?vault=${encodedVault}`;
-    const autoMode = data.payload.settings.auto_mode;
     
     // 直接使用布尔值检查
     if (autoMode === false) {

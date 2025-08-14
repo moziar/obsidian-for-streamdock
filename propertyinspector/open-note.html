@@ -22,10 +22,21 @@
       <input class="sdpi-item-value" type="text" id="note_path" value="" required>
     </div>
 
+    <div type="checkbox" class="sdpi-item" id="single_check">
+      <div class="sdpi-item-label">Auto Mode</div>
+      <div class="sdpi-item-value">
+        <input id="auto_mode" type="checkbox">
+        <label for="auto_mode"><span></span>Enable</label>
+      </div>
+    </div>
+
     <div class="sdpi-heading">Support</div>
     <div>
       Support both relative path and unique file name. <br>
       Files that aren't in .md format must have an extension.<br>
+      <br>
+      If you enable Auto Mode, the plugin will open note in new pane, and focus on it if it's already opened. <br>
+      Please install the companion <a data-open-url="https://obsidian.md/plugins?id=obsidian-advanced-uri">Obsidian Advanced URI plugin</a> to make Auto Mode work!<br>
       <br>
       <a data-open-url="https://github.com/moziar/obsidian-for-streamdock">Documentation</a>
     </div>
