@@ -45,7 +45,8 @@ A StreamDock plugin which could help you open notes, run obsidian commands, sear
 #### Open Daily Note
 
 1. Only the API Key is needed.
-1. Will open your daily note directly even if obsidian did not open.
+2. Will open your daily note directly even if obsidian did not open.
+3. With `Auto Mode` enabled, the plugin opens the daily note in a new pane and focuses on it if it's already open.
 
 
 
@@ -55,6 +56,7 @@ A StreamDock plugin which could help you open notes, run obsidian commands, sear
 2. Enter the unique note name, or note relative path to `Note Path`, the plugin will auto encode it.
 3. Files that aren't in `.md` format must have an extension.
 4. Support open note when the obsidian did not open.
+5. When `Auto Mode` is enabled, the plugin opens the note in a new pane and focuses on it if it's already open.
 
 
 
