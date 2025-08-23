@@ -96,7 +96,7 @@ A StreamDock plugin which could help you open notes, run obsidian commands, sear
 1. Enter the API Key.
 2. Enter the Command ID. You can get the ID from [Local REST API for Obsidian](https://coddingtonbear.github.io/obsidian-local-rest-api/#/).
 
-
+   > See [showcase](Showcase.md#command) for inspiration.
 
 #### Load Workspace
 
@@ -112,6 +112,8 @@ A StreamDock plugin which could help you open notes, run obsidian commands, sear
 2. Enter the plugin ID. You could get it from [community plugin list](https://github.com/obsidianmd/obsidian-releases/blob/master/community-plugins.json).
 3. You could use this function to open community plugins setting quickly.
 4. This function requires  *Obsidian Advanced URI plugin*, install it before use.
+
+    >  See [showcase](Showcase.md#settings-navigator) for inspiration.
 
 
 
