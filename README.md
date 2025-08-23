@@ -20,7 +20,7 @@ A StreamDock plugin which could help you open notes, run obsidian commands, sear
 ### 1. Download from MiraBox Space
 
 1. Install *Local-REST-API*, *Advanced URI*, *Periodic Notes* plugin on Obsidian.
-1. Download obsidian-for-streamdock dircetly from [ MiraBox Space](https://space.key123.vip/product?id=20250604000924).
+2. Download obsidian-for-streamdock directly from [ MiraBox Space](https://space.key123.vip/product?id=20250604000924).
 
 
 
@@ -63,7 +63,7 @@ A StreamDock plugin which could help you open notes, run obsidian commands, sear
 #### Open Vault
 
 1. Enter the Vault you want to open.
-2. This is helpful when you have mutiple vaults.
+2. This is helpful when you have multiple vaults.
 3. Support cold launch.
 
 
@@ -109,7 +109,7 @@ A StreamDock plugin which could help you open notes, run obsidian commands, sear
 #### Settings Navigator
 
 1. Enter your Vault name.
-2. Enter the plugin ID. You could get it from [Local REST API for Obsidian](https://coddingtonbear.github.io/obsidian-local-rest-api/#/).
+2. Enter the plugin ID. You could get it from [community plugin list](https://github.com/obsidianmd/obsidian-releases/blob/master/community-plugins.json).
 3. You could use this function to open community plugins setting quickly.
 4. This function requires  *Obsidian Advanced URI plugin*, install it before use.
 
