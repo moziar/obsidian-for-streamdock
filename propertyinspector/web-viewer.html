@@ -9,14 +9,34 @@
     <meta content=black name=apple-mobile-web-app-status-bar-style>
     <title>com.moz.obsidian-for-streamdock.web-viewer</title>
     <link href="css/pi.css" rel="stylesheet">
+    <style>
+        .sdpi-wrapper details > .sdpi-item {
+            margin-left: -12px;
+            padding-left: -18px;
+        }
+
+        .sdpi-wrapper details > .sdpi-item > .sdpi-item-value {
+            margin-right: 60px;
+        }
+    </style>
 </head>
 
 <body>
-<div class="sdpi-item" title="Enter the API Key" type="textarea">
-    <div class="sdpi-item-label" data-localize="API Key">API Key</div>
-    <span class="sdpi-item-value textarea">
-        <textarea id="apikey" placeholder="Enter API Key here" required rows="3" type="textarea"></textarea>
-      </span>
+<div class="sdpi-wrapper">
+    <div class="sdpi-item" title="Enter the API Key" type="textarea">
+        <div class="sdpi-item-label" data-localize="API Key">API Key</div>
+        <span class="sdpi-item-value textarea">
+            <textarea id="apikey" placeholder="Enter API Key here" required rows="3" type="textarea"></textarea>
+        </span>
+    </div>
+
+    <details>
+        <summary>Customize</summary>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label" data-localize="Port">Port</div>
+            <input class="sdpi-item-value" id="port" placeholder="27123" type="number" value="">
+        </div>
+    </details>
 </div>
 
 <div class="sdpi-info-label hidden" style="top: -1000;" value=""></div>

@@ -38,13 +38,15 @@ function connected(jsn) {
  *     apikey?: string,
  *     body?: string|null,
  *     command?: string,
+ *     port?:number
  *     }
  *   },
  * }} data
  */
 function runCommand(data) {
     const command = data.payload.settings.command || '';
-    const defaultUrl = `http://127.0.0.1:27123/commands/${command}`;
+    const port = data.payload.settings.port || 27123;
+    const defaultUrl = `http://127.0.0.1:${port}/commands/${command}`;
     executeSimpleCommand(data, defaultUrl);
 }
 
@@ -159,22 +161,24 @@ function dailyNote(data) {
  *       contentType?: string|null,
  *       apikey?: string|null,
  *       body?: string|null,
- *       note_type?: string|null
+ *       note_type?: string|null,
+ *       port?:number
  *       }
  *   },
  * }} data
  */
 function noteNavigatorToCurrent(data) {
     const noteType = data.payload.settings.note_type || NoteType.DAILY;
+    const port = data.payload.settings.port || 27123;
     let url = '';
 
     switch (noteType) {
         case NoteType.WEEKLY:
-            url = 'http://127.0.0.1:27123/commands/periodic-notes:open-weekly-note';
+            url = `http://127.0.0.1:${port}/commands/periodic-notes:open-weekly-note`;
             break;
         case NoteType.DAILY:
         default:
-            url = 'http://127.0.0.1:27123/commands/daily-notes/';
+            url = `http://127.0.0.1:${port}/commands/daily-notes/`;
             break;
     }
 
@@ -182,31 +186,36 @@ function noteNavigatorToCurrent(data) {
 }
 
 function webViewer(data) {
-    executeSimpleCommand(data, 'http://127.0.0.1:27123/commands/webviewer:open/');
+    const port = data.payload.settings.port || 27123;
+    executeSimpleCommand(data, `http://127.0.0.1:${port}/commands/webviewer:open/`);
 }
 
 function webSearcher(data) {
-    executeSimpleCommand(data, 'http://127.0.0.1:27123/commands/webviewer:search/');
+    const port = data.payload.settings.port || 27123;
+    executeSimpleCommand(data, `http://127.0.0.1:${port}/commands/webviewer:search/`);
 }
 
 function switchTab(data) {
+    const port = data.payload.settings.port || 27123;
     dialRotate(
         data,
-        'http://127.0.0.1:27123/commands/workspace:next-tab',
-        'http://127.0.0.1:27123/commands/workspace:previous-tab'
+        `http://127.0.0.1:${port}/commands/workspace:next-tab`,
+        `http://127.0.0.1:${port}/commands/workspace:previous-tab`
     );
 }
 
 function zoomInOut(data) {
+    const port = data.payload.settings.port || 27123;
     dialRotate(
         data,
-        'http://127.0.0.1:27123/commands/window:zoom-in',
-        'http://127.0.0.1:27123/commands/window:zoom-out'
+        `http://127.0.0.1:${port}/commands/window:zoom-in`,
+        `http://127.0.0.1:${port}/commands/window:zoom-out`
     );
 }
 
 function zoomReset(data) {
-    executeSimpleCommand(data, 'http://127.0.0.1:27123/commands/window:reset-zoom');
+    const port = data.payload.settings.port || 27123;
+    executeSimpleCommand(data, `http://127.0.0.1:${port}/commands/window:reset-zoom`);
 }
 
 /**
@@ -250,11 +259,13 @@ const NoteType = {
  *       body?: string|null,
  *       ticks?: string|null,
  *       note_type?: string|null,
+ *       port?:number
  *     }
  *   },
  * }} data
  */
 function noteNavigator(data) {
+    const port = data.payload.settings.port || 27123;
     const noteType = data.payload.settings.note_type || NoteType.DAILY;
 
     let nextCommand;
@@ -274,21 +285,23 @@ function noteNavigator(data) {
 
     dialRotate(
         data,
-        `http://127.0.0.1:27123/commands/${nextCommand}`,
-        `http://127.0.0.1:27123/commands/${prevCommand}`
+        `http://127.0.0.1:${port}/commands/${nextCommand}`,
+        `http://127.0.0.1:${port}/commands/${prevCommand}`
     );
 }
 
 function webZoomInOut(data) {
+    const port = data.payload.settings.port || 27123;
     dialRotate(
         data,
-        'http://127.0.0.1:27123/commands/webviewer:zoom-in',
-        'http://127.0.0.1:27123/commands/webviewer:zoom-out'
+        `http://127.0.0.1:${port}/commands/webviewer:zoom-in`,
+        `http://127.0.0.1:${port}/commands/webviewer:zoom-out`
     );
 }
 
 function webZoomReset(data) {
-    executeSimpleCommand(data, 'http://127.0.0.1:27123/commands/webviewer:zoom-reset');
+    const port = data.payload.settings.port || 27123;
+    executeSimpleCommand(data, `http://127.0.0.1:${port}/commands/webviewer:zoom-reset`);
 }
 
 function openUrlAndShowOk(data, url) {
