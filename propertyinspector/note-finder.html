@@ -2,139 +2,140 @@
 <html>
 
 <head>
-  <meta charset="utf-8" />
-  <meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,minimal-ui,viewport-fit=cover">
-  <meta name=apple-mobile-web-app-capable content=yes>
-  <meta name=apple-mobile-web-app-status-bar-style content=black>
-  <title>com.moz.obsidian-for-streamdock.note-finder</title>
-  <link rel="stylesheet" href="css/pi.css">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,minimal-ui,viewport-fit=cover"
+          name=viewport>
+    <meta content=yes name=apple-mobile-web-app-capable>
+    <meta content=black name=apple-mobile-web-app-status-bar-style>
+    <title>com.moz.obsidian-for-streamdock.note-finder</title>
+    <link href="css/pi.css" rel="stylesheet">
 </head>
 
 <body>
-  <div class="sdpi-wrapper">
-    <div type="textarea" class="sdpi-item" title="Enter the vault name">
-      <div class="sdpi-item-label" data-localize="Vault Name">Vault</div>
-      <input class="sdpi-item-value" type="text" id="vault" value="" required>
+<div class="sdpi-wrapper">
+    <div class="sdpi-item" title="Enter the vault name" type="textarea">
+        <div class="sdpi-item-label" data-localize="Vault Name">Vault</div>
+        <input class="sdpi-item-value" id="vault" required type="text" value="">
     </div>
     <div class="sdpi-item">
-      <div class="sdpi-item-label" data-localize="Type">Type</div>
-      <select class="sdpi-item-value select" id="type">
-        <option value="All" selected>All</option>
-        <option value="Tag">Tag</option>
-        <option value="Task">Task</option>
-        <option value="File">File</option>
-        <option value="Path">Path</option>
-        <option value="Property">Property</option>
-      </select>
+        <div class="sdpi-item-label" data-localize="Type">Type</div>
+        <select class="sdpi-item-value select" id="type">
+            <option selected value="All">All</option>
+            <option value="Tag">Tag</option>
+            <option value="Task">Task</option>
+            <option value="File">File</option>
+            <option value="Path">Path</option>
+            <option value="Property">Property</option>
+        </select>
     </div>
     <div class="sdpi-item" id="status_input">
-      <div class="sdpi-item-label" data-localize="Status">Status</div>
-      <select class="sdpi-item-value select" id="status">
-        <option value="AnyTask" selected>Any</option>
-        <option value="TodoTask">Todo</option>
-        <option value="DoneTask">Done</option>
-      </select>
+        <div class="sdpi-item-label" data-localize="Status">Status</div>
+        <select class="sdpi-item-value select" id="status">
+            <option selected value="AnyTask">Any</option>
+            <option value="TodoTask">Todo</option>
+            <option value="DoneTask">Done</option>
+        </select>
     </div>
-    <div type="textarea" class="sdpi-item" id="query_input" title="Enter the search query">
-      <div class="sdpi-item-label" data-localize="Search Query">Query</div>
-      <span class="sdpi-item-value textarea">
-        <textarea type="textarea" rows="1" id="query" placeholder="Search query"></textarea>
+    <div class="sdpi-item" id="query_input" title="Enter the search query" type="textarea">
+        <div class="sdpi-item-label" data-localize="Search Query">Query</div>
+        <span class="sdpi-item-value textarea">
+        <textarea id="query" placeholder="Search query" rows="1" type="textarea"></textarea>
       </span>
     </div>
-    <div type="textarea" class="sdpi-item" id="property_input" title="Enter the Property" style="display: none;">
-      <div class="sdpi-item-label" data-localize="Property">Property</div>
-      <div class="sdpi-item-value">
-        <input class="full" type="text" id="property_key" value="" placeholder="Property">
-        <input class="full" type="text" id="property_value" value="" placeholder="Value">
-      </div>
+    <div class="sdpi-item" id="property_input" style="display: none;" title="Enter the Property" type="textarea">
+        <div class="sdpi-item-label" data-localize="Property">Property</div>
+        <div class="sdpi-item-value">
+            <input class="full" id="property_key" placeholder="Property" type="text" value="">
+            <input class="full" id="property_value" placeholder="Value" type="text" value="">
+        </div>
     </div>
-  </div>
+</div>
 
-  <div class="sdpi-info-label hidden" style="top: -1000;" value=""></div>
+<div class="sdpi-info-label hidden" style="top: -1000;" value=""></div>
 
-  <style>
+<style>
     /* 为 Property 输入框添加特定样式 */
     #property_input .sdpi-item-value {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
     }
-    
-    #property_input .sdpi-item-value input {
-      width: 100%;
-      margin-bottom: 4px;
-    }
-  </style>
 
-  <script src="js/common.js"></script>
-  <script src="js/common_pi.js"></script>
-  <script src="js/index_pi.js"></script>
-  <script>
+    #property_input .sdpi-item-value input {
+        width: 100%;
+        margin-bottom: 4px;
+    }
+</style>
+
+<script src="js/common.js"></script>
+<script src="js/common_pi.js"></script>
+<script src="js/index_pi.js"></script>
+<script>
     // 初始化时根据当前选择的类型显示或隐藏相应的输入框
     $SD.on('connected', (jsn) => {
-      const typeSelect = document.getElementById('type');
-      const queryInput = document.getElementById('query_input');
-      const statusInput = document.getElementById('status_input');
-      const propertyInput = document.getElementById('property_input');
-      
-      // 初始化显示状态
-      updateInputVisibility();
-      
-      // 添加类型选择变化的事件监听器
-      typeSelect.addEventListener('change', function() {
+        const typeSelect = document.getElementById('type');
+        const queryInput = document.getElementById('query_input');
+        const statusInput = document.getElementById('status_input');
+        const propertyInput = document.getElementById('property_input');
+
+        // 初始化显示状态
         updateInputVisibility();
-        
-        // 当类型为 Property 时，清空 query 和 status 值
-        // 当类型不是 Property 时，清空 property_key 和 property_value 值
-        if (typeSelect.value === 'Property') {
-          const queryElement = document.getElementById('query');
-          queryElement.value = '';
-          const statusElement = document.getElementById('status');
-          statusElement.value = '';
-          // 触发设置保存
-          const event = new Event('input', { bubbles: true });
-          queryElement.dispatchEvent(event);
-        } else {
-          const propertyKeyElement = document.getElementById('property_key');
-          const propertyValueElement = document.getElementById('property_value');
-          propertyKeyElement.value = '';
-          propertyValueElement.value = '';
-          // 触发设置保存
-          const event = new Event('input', { bubbles: true });
-          propertyKeyElement.dispatchEvent(event);
-          propertyValueElement.dispatchEvent(event);
-        }
-      });
-      
-      // 更新输入框显示状态的函数
-      function updateInputVisibility() {
-        if (typeSelect.value === 'Property') {
-          queryInput.style.display = 'none';
-          statusInput.style.display = 'none';
-          propertyInput.style.display = 'flex';
-        } else if (typeSelect.value === 'Task') {
-          queryInput.style.display = 'flex';
-          statusInput.style.display = 'flex';
-          propertyInput.style.display = 'none';
-        } else {
-          queryInput.style.display = 'flex';
-          statusInput.style.display = 'none';
-          propertyInput.style.display = 'none';
-        }
-      }
-      
-      // 当设置加载时，确保显示状态正确
-      $SD.on('didReceiveSettings', function(jsonObj) {
-        if (jsonObj && jsonObj.payload && jsonObj.payload.settings) {
-          const settings = jsonObj.payload.settings;
-          if (settings.type) {
-            typeSelect.value = settings.type;
+
+        // 添加类型选择变化的事件监听器
+        typeSelect.addEventListener('change', function () {
             updateInputVisibility();
-          }
+
+            // 当类型为 Property 时，清空 query 和 status 值
+            // 当类型不是 Property 时，清空 property_key 和 property_value 值
+            if (typeSelect.value === 'Property') {
+                const queryElement = document.getElementById('query');
+                queryElement.value = '';
+                const statusElement = document.getElementById('status');
+                statusElement.value = '';
+                // 触发设置保存
+                const event = new Event('input', {bubbles: true});
+                queryElement.dispatchEvent(event);
+            } else {
+                const propertyKeyElement = document.getElementById('property_key');
+                const propertyValueElement = document.getElementById('property_value');
+                propertyKeyElement.value = '';
+                propertyValueElement.value = '';
+                // 触发设置保存
+                const event = new Event('input', {bubbles: true});
+                propertyKeyElement.dispatchEvent(event);
+                propertyValueElement.dispatchEvent(event);
+            }
+        });
+
+        // 更新输入框显示状态的函数
+        function updateInputVisibility() {
+            if (typeSelect.value === 'Property') {
+                queryInput.style.display = 'none';
+                statusInput.style.display = 'none';
+                propertyInput.style.display = 'flex';
+            } else if (typeSelect.value === 'Task') {
+                queryInput.style.display = 'flex';
+                statusInput.style.display = 'flex';
+                propertyInput.style.display = 'none';
+            } else {
+                queryInput.style.display = 'flex';
+                statusInput.style.display = 'none';
+                propertyInput.style.display = 'none';
+            }
         }
-      });
+
+        // 当设置加载时，确保显示状态正确
+        $SD.on('didReceiveSettings', function (jsonObj) {
+            if (jsonObj && jsonObj.payload && jsonObj.payload.settings) {
+                const settings = jsonObj.payload.settings;
+                if (settings.type) {
+                    typeSelect.value = settings.type;
+                    updateInputVisibility();
+                }
+            }
+        });
     });
-  </script>
+</script>
 </body>
 
 </html>

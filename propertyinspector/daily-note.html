@@ -2,22 +2,23 @@
 <html>
 
 <head>
-  <meta charset="utf-8" />
-  <meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,minimal-ui,viewport-fit=cover">
-  <meta name=apple-mobile-web-app-capable content=yes>
-  <meta name=apple-mobile-web-app-status-bar-style content=black>
-  <title>com.moz.obsidian-for-streamdock.daily-note</title>
-  <link rel="stylesheet" href="css/pi.css">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,minimal-ui,viewport-fit=cover"
+          name=viewport>
+    <meta content=yes name=apple-mobile-web-app-capable>
+    <meta content=black name=apple-mobile-web-app-status-bar-style>
+    <title>com.moz.obsidian-for-streamdock.daily-note</title>
+    <link href="css/pi.css" rel="stylesheet">
 </head>
 
 <body>
-  <div class="sdpi-wrapper">
-    <div type="textarea" class="sdpi-item" title="Enter the vault name">
-      <div class="sdpi-item-label" data-localize="Vault Name">Vault</div>
-      <input class="sdpi-item-value" type="text" id="vault" value="" required>
+<div class="sdpi-wrapper">
+    <div class="sdpi-item" title="Enter the vault name" type="textarea">
+        <div class="sdpi-item-label" data-localize="Vault Name">Vault</div>
+        <input class="sdpi-item-value" id="vault" required type="text" value="">
     </div>
 
-    <div type="checkbox" class="sdpi-item" id="single_check">
+    <div class="sdpi-item" id="single_check" type="checkbox">
         <div class="sdpi-item-label">Auto Mode</div>
         <div class="sdpi-item-value">
             <input id="auto_mode" type="checkbox">
@@ -25,19 +26,20 @@
         </div>
     </div>
 
-      <div class="sdpi-heading">Support</div>
-      <div>
-          On Auto Mode, the plugin opens the daily note in a new pane and focuses on it if it's already open. <br>
-          <br>
-          Please install the companion <a data-open-url="https://obsidian.md/plugins?id=obsidian-advanced-uri">Obsidian Advanced URI plugin</a> to make Auto Mode work!<br>
-      </div>
-  </div>
+    <div class="sdpi-heading">Support</div>
+    <div>
+        On Auto Mode, the plugin opens the daily note in a new pane and focuses on it if it's already open. <br>
+        <br>
+        Please install the companion <a data-open-url="https://obsidian.md/plugins?id=obsidian-advanced-uri">Obsidian
+        Advanced URI plugin</a> to make Auto Mode work!<br>
+    </div>
+</div>
 
-  <div class="sdpi-info-label hidden" style="top: -1000;" value=""></div>
+<div class="sdpi-info-label hidden" style="top: -1000;" value=""></div>
 
-  <script src="js/common.js"></script>
-  <script src="js/common_pi.js"></script>
-  <script src="js/index_pi.js"></script>
+<script src="js/common.js"></script>
+<script src="js/common_pi.js"></script>
+<script src="js/index_pi.js"></script>
 </body>
 
 </html>
