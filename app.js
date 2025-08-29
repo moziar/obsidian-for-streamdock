@@ -45,8 +45,8 @@ function connected(jsn) {
  */
 function runCommand(data) {
     const command = data.payload.settings.command || '';
-    const port = data.payload.settings.port || 27123;
-    const defaultUrl = `http://127.0.0.1:${port}/commands/${command}`;
+    const urlPrefix = getUrlPrefix(data);
+    const defaultUrl = `${urlPrefix}/commands/${command}`;
     executeSimpleCommand(data, defaultUrl);
 }
 
@@ -169,16 +169,16 @@ function dailyNote(data) {
  */
 function noteNavigatorToCurrent(data) {
     const noteType = data.payload.settings.note_type || NoteType.DAILY;
-    const port = data.payload.settings.port || 27123;
+    const urlPrefix = getUrlPrefix(data);
     let url = '';
 
     switch (noteType) {
         case NoteType.WEEKLY:
-            url = `http://127.0.0.1:${port}/commands/periodic-notes:open-weekly-note`;
+            url = `${urlPrefix}/commands/periodic-notes:open-weekly-note`;
             break;
         case NoteType.DAILY:
         default:
-            url = `http://127.0.0.1:${port}/commands/daily-notes/`;
+            url = `${urlPrefix}/commands/daily-notes/`;
             break;
     }
 
@@ -186,36 +186,36 @@ function noteNavigatorToCurrent(data) {
 }
 
 function webViewer(data) {
-    const port = data.payload.settings.port || 27123;
-    executeSimpleCommand(data, `http://127.0.0.1:${port}/commands/webviewer:open/`);
+    const urlPrefix = getUrlPrefix(data);
+    executeSimpleCommand(data, `${urlPrefix}/commands/webviewer:open/`);
 }
 
 function webSearcher(data) {
-    const port = data.payload.settings.port || 27123;
-    executeSimpleCommand(data, `http://127.0.0.1:${port}/commands/webviewer:search/`);
+    const urlPrefix = getUrlPrefix(data);
+    executeSimpleCommand(data, `${urlPrefix}/commands/webviewer:search/`);
 }
 
 function switchTab(data) {
-    const port = data.payload.settings.port || 27123;
+    const urlPrefix = getUrlPrefix(data);
     dialRotate(
         data,
-        `http://127.0.0.1:${port}/commands/workspace:next-tab`,
-        `http://127.0.0.1:${port}/commands/workspace:previous-tab`
+        `${urlPrefix}/commands/workspace:next-tab`,
+        `${urlPrefix}/commands/workspace:previous-tab`
     );
 }
 
 function zoomInOut(data) {
-    const port = data.payload.settings.port || 27123;
+    const urlPrefix = getUrlPrefix(data);
     dialRotate(
         data,
-        `http://127.0.0.1:${port}/commands/window:zoom-in`,
-        `http://127.0.0.1:${port}/commands/window:zoom-out`
+        `${urlPrefix}/commands/window:zoom-in`,
+        `${urlPrefix}/commands/window:zoom-out`
     );
 }
 
 function zoomReset(data) {
-    const port = data.payload.settings.port || 27123;
-    executeSimpleCommand(data, `http://127.0.0.1:${port}/commands/window:reset-zoom`);
+    const urlPrefix = getUrlPrefix(data);
+    executeSimpleCommand(data, `${urlPrefix}/commands/window:reset-zoom`);
 }
 
 /**
@@ -265,8 +265,8 @@ const NoteType = {
  * }} data
  */
 function noteNavigator(data) {
-    const port = data.payload.settings.port || 27123;
     const noteType = data.payload.settings.note_type || NoteType.DAILY;
+    const urlPrefix = getUrlPrefix(data);
 
     let nextCommand;
     let prevCommand;
@@ -285,23 +285,23 @@ function noteNavigator(data) {
 
     dialRotate(
         data,
-        `http://127.0.0.1:${port}/commands/${nextCommand}`,
-        `http://127.0.0.1:${port}/commands/${prevCommand}`
+        `${urlPrefix}/commands/${nextCommand}`,
+        `${urlPrefix}/commands/${prevCommand}`
     );
 }
 
 function webZoomInOut(data) {
-    const port = data.payload.settings.port || 27123;
+    const urlPrefix = getUrlPrefix(data);
     dialRotate(
         data,
-        `http://127.0.0.1:${port}/commands/webviewer:zoom-in`,
-        `http://127.0.0.1:${port}/commands/webviewer:zoom-out`
+        `${urlPrefix}/commands/webviewer:zoom-in`,
+        `${urlPrefix}/commands/webviewer:zoom-out`
     );
 }
 
 function webZoomReset(data) {
-    const port = data.payload.settings.port || 27123;
-    executeSimpleCommand(data, `http://127.0.0.1:${port}/commands/webviewer:zoom-reset`);
+    const urlPrefix = getUrlPrefix(data);
+    executeSimpleCommand(data, `${urlPrefix}/commands/webviewer:zoom-reset`);
 }
 
 function openUrlAndShowOk(data, url) {
@@ -515,6 +515,28 @@ function settingsNavigator(data) {
     let defaultUrl = `obsidian://adv-uri?vault=${encodedVault}&settingid=${encodedPluginId}`;
 
     openUrlAndShowOk(data,defaultUrl);
+}
+
+/**
+ * @param {{
+ *   context: string,
+ *   payload: {
+ *     settings: {
+ *       port?:number,
+ *       https?:boolean
+ *     }
+ *   },
+ * }} data
+ */
+function getUrlPrefix(data) {
+    const port = data.payload.settings.port;
+    const https = data.payload.settings.https || false;
+    
+    const protocol = https ? 'https' : 'http';
+    const defaultPort = https ? '27124' : '27123';
+    const actualPort = port || defaultPort;
+    
+    return `${protocol}://localhost:${actualPort}`;
 }
 
 function getPrefixByType(type) {

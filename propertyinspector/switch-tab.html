@@ -36,6 +36,14 @@
             <div class="sdpi-item-label" data-localize="Port">Port</div>
             <input class="sdpi-item-value" id="port" placeholder="27123" type="number" value="">
         </div>
+
+        <div class="sdpi-item" id="single_check" type="checkbox">
+            <div class="sdpi-item-label">Https</div>
+            <div class="sdpi-item-value">
+                <input id="https" type="checkbox">
+                <label for="https"><span></span>Enable</label>
+            </div>
+        </div>
     </details>
 </div>
 
@@ -44,6 +52,23 @@
 <script src="js/common.js"></script>
 <script src="js/common_pi.js"></script>
 <script src="js/index_pi.js"></script>
+<script>
+    // 添加HTTPS复选框事件监听器，动态更改端口输入框的placeholder
+    document.addEventListener('DOMContentLoaded', function() {
+        const httpsCheckbox = document.getElementById('https');
+        const portInput = document.getElementById('port');
+
+        if (httpsCheckbox && portInput) {
+            httpsCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    portInput.placeholder = '27124';
+                } else {
+                    portInput.placeholder = '27123';
+                }
+            });
+        }
+    });
+</script>
 </body>
 
 </html>
