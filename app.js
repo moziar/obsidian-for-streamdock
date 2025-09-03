@@ -1,4 +1,49 @@
+// 全局设置管理
+let globalSettings = {};
+
+// 定义搜索类型常量
+const SearchType = {
+    ALL: 'All',
+    TAG: 'Tag',
+    TASK: 'Task',
+    FILE: 'File',
+    PATH: 'Path',
+    PROPERTY: 'Property',
+    ANY: 'AnyTask',
+    TODO: 'TodoTask',
+    DONE: 'DoneTask'
+}
+
+const NoteType = {
+    DAILY: 'Daily',
+    WEEKLY: 'Weekly',
+    MONTHLY: 'Monthly',
+    QUARTERLY: 'Quarterly',
+    YEARLY: 'Yearly',
+};
+
 $SD.on('connected', (jsonObj) => connected(jsonObj));
+$SD.on('didReceiveGlobalSettings', (jsonObj) => {
+    const settings = jsonObj.payload.settings || {};
+    const safeSettings = {};
+    
+    // 复制非敏感设置项
+    for (const [key, value] of Object.entries(settings)) {
+        if (key.toLowerCase() !== 'apikey') {
+            safeSettings[key] = value;
+        } else {
+            // 对于敏感的ApiKey，只记录是否存在（不显示实际值）
+            safeSettings[key] = value ? '[REDACTED]' : undefined;
+        }
+    }
+    
+    console.log('[App] Receive Global Settings:', safeSettings);
+
+    globalSettings = settings;
+});
+
+// 请求获取全局设置
+$SD.api.common.getGlobalSettings($SD.uuid);
 
 function connected(jsn) {
     const events = [
@@ -239,14 +284,6 @@ function updateNoteNavigatorTitle(data) {
     setTitle(context, title);
 }
 
-const NoteType = {
-    DAILY: 'Daily',
-    WEEKLY: 'Weekly',
-    MONTHLY: 'Monthly',
-    QUARTERLY: 'Quarterly',
-    YEARLY: 'Yearly',
-};
-
 /**
  * @param {{
  *   context: string,
@@ -389,18 +426,6 @@ function dialRotate(data, positiveCommand, negativeCommand) {
     sendHttp(newData);
 }
 
-const SearchType = {
-    ALL: 'All',
-    TAG: 'Tag',
-    TASK: 'Task',
-    FILE: 'File',
-    PATH: 'Path',
-    PROPERTY: 'Property',
-    ANY: 'AnyTask',
-    TODO: 'TodoTask',
-    DONE: 'DoneTask'
-}
-
 /**
  * @param {{
  *   context: string,
@@ -528,15 +553,37 @@ function settingsNavigator(data) {
  *   },
  * }} data
  */
+/**
+ * 获取URL前缀，支持设置优先级：页面设置 > 全局设置 > 默认值
+ * @param {object} data - 请求数据
+ * @returns {string} URL前缀
+ */
 function getUrlPrefix(data) {
-    const port = data.payload.settings.port;
-    const https = data.payload.settings.https || false;
+    // 获取页面设置
+    const pageSettings = data.payload.settings || {};
+    
+    // 设置优先级处理：页面设置 > 全局设置 > 默认值
+    const port = pageSettings.port || globalSettings.port;
+    const https = pageSettings.https !== undefined ? pageSettings.https : globalSettings.https;
+    const apikey = pageSettings.apikey || globalSettings.apikey;
     
     const protocol = https ? 'https' : 'http';
     const defaultPort = https ? '27124' : '27123';
     const actualPort = port || defaultPort;
     
+    console.log(`[App] URL prefix generated: ${protocol}://localhost:${actualPort}, HTTPS: ${https}, Port: ${actualPort}, API Key: ${apikey ? '[set]' : '[not set]'}`);
+    
     return `${protocol}://localhost:${actualPort}`;
+}
+
+/**
+ * 获取API Key，支持设置优先级：页面设置 > 全局设置
+ * @param {object} data - 请求数据
+ * @returns {string} API Key
+ */
+function getApiKey(data) {
+    const pageSettings = data.payload.settings || {};
+    return pageSettings.apikey || globalSettings.apikey || '';
 }
 
 function getPrefixByType(type) {
@@ -583,7 +630,9 @@ function sendHttp(data) {
     const url = data.payload.settings.url;
     const method = 'POST';
     const contentType = 'application/json';
-    const headers = `Authorization: Bearer ${data.payload.settings.apikey || ''}`;
+    // 使用支持全局设置的API Key获取方法
+    const apikey = getApiKey(data);
+    const headers = `Authorization: Bearer ${apikey}`;
     const body = '';
 
     // log('sendHttp', { url, method, contentType, headers, body });
