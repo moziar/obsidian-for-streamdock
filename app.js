@@ -564,7 +564,17 @@ function getUrlPrefix(data) {
     
     // 设置优先级处理：页面设置 > 全局设置 > 默认值
     const port = pageSettings.port || globalSettings.port;
-    const https = pageSettings.https !== undefined ? pageSettings.https : globalSettings.https;
+    
+    // HTTPS 状态判断：如果页面设置中有 https 属性，使用页面设置；否则使用全局设置；最后默认为 false
+    let https;
+    if (pageSettings.hasOwnProperty('https')) {
+        https = Boolean(pageSettings.https);
+    } else if (globalSettings.hasOwnProperty('https')) {
+        https = Boolean(globalSettings.https);
+    } else {
+        https = false;
+    }
+    
     const apikey = pageSettings.apikey || globalSettings.apikey;
     
     const protocol = https ? 'https' : 'http';
