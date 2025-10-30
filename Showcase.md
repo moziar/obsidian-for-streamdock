@@ -25,6 +25,7 @@
 | editor:insert-footnote                       | /                 | Insert a footnote.                                                             |
 | editor:insert-table                          | /                 | Insert a table.                                                                |
 | editor:insert-callout                        | /                 | Insert a callout.                                                              |
+| Toggle light/dark mode                       | /                 | Toggle light/dark mode. This works on Obsidian v1.10.0 or feature release.     |
 
 
 
