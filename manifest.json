@@ -99,6 +99,26 @@
       ]
     },
     {
+      "UUID": "com.moz.obsidian-for-streamdock.toggle-color-scheme",
+      "Name": "Toggle Color Scheme",
+      "Tooltip": "切换亮色/暗色模式",
+      "PropertyInspectorPath": "propertyInspector/toggle-color-scheme.html",
+      "Icon": "images/run-command_action",
+      "state": 0,
+      "States": [
+        {
+          "FontSize": "11",
+          "Title": "Light",
+          "Image": "images/theme-light"
+        },
+        {
+          "FontSize": "11",
+          "Title": "Dark",
+          "Image": "images/theme-dark"
+        }
+      ]
+    },
+    {
       "UUID": "com.moz.obsidian-for-streamdock.load-workspace",
       "Name": "Load Workspace",
       "Tooltip": "加载 Workspace",

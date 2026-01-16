@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,minimal-ui,viewport-fit=cover"
+          name=viewport>
+    <meta content=yes name=apple-mobile-web-app-capable>
+    <meta content=black name=apple-mobile-web-app-status-bar-style>
+    <title>com.moz.obsidian-for-streamdock.toggle-color-scheme</title>
+    <link href="css/pi.css" rel="stylesheet">
+    <style>
+        .sdpi-wrapper details > .sdpi-item {
+            margin-left: -12px;
+            padding-left: -18px;
+        }
+
+        .sdpi-wrapper details > .sdpi-item > .sdpi-item-value {
+            margin-right: 60px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="sdpi-wrapper">
+    <div class="sdpi-item" title="Enter the API Key" type="textarea">
+        <div class="sdpi-item-label" data-localize="API Key">API Key</div>
+        <span class="sdpi-item-value textarea">
+        <textarea id="apikey" placeholder="" required rows="3" type="textarea"></textarea>
+      </span>
+    </div>
+
+    <div class="sdpi-item" id="color_scheme_toggle">
+        <div class="sdpi-item-label">Theme</div>
+        <div class="sdpi-item-value">
+            <button id="toggle_theme_button">Toggle light/dark</button>
+        </div>
+    </div>
+
+    <details>
+        <summary>Customize</summary>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label" data-localize="Port">Port</div>
+            <input class="sdpi-item-value" id="port" type="number" value="">
+        </div>
+
+        <div class="sdpi-item" id="single_check" type="checkbox">
+            <div class="sdpi-item-label">Https</div>
+            <div class="sdpi-item-value">
+                <input id="https" type="checkbox">
+                <label for="https"><span></span>Enable</label>
+            </div>
+        </div>
+    </details>
+
+    <div class="sdpi-heading">Support</div>
+    <div>
+        Please install the companion <a data-open-url="https://obsidian.md/plugins?id=obsidian-local-rest-api">Obsidian
+        Local REST API plugin</a> to make this action work!<br>
+        <br>
+        <a data-open-url="https://github.com/moziar/obsidian-for-streamdock">Documentation</a>
+    </div>
+</div>
+
+<div class="sdpi-info-label hidden" style="top: -1000;" value=""></div>
+
+<script src="js/common.js"></script>
+<script src="js/common_pi.js"></script>
+<script src="js/index_pi.js"></script>
+<script src="js/api_pi.js"></script>
+<script src="js/global_settings_pi.js"></script>
+<script>
+    (function() {
+        "use strict";
+
+        let piGlobalSettings = {};
+
+        function updateThemeButtonLabel() {
+            const button = document.getElementById("toggle_theme_button");
+            if (!button) return;
+            const isDark = !!piGlobalSettings.isDarkMode;
+            button.textContent = isDark ? "Switch to light" : "Switch to dark";
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const button = document.getElementById("toggle_theme_button");
+            if (!button) return;
+
+            button.addEventListener("click", function() {
+                if (typeof sendValueToPlugin === "function") {
+                    sendValueToPlugin({ type: "toggleColorScheme" }, "property_inspector");
+                }
+                if (typeof $SD !== "undefined" && $SD.api && typeof $SD.api.getGlobalSettings === "function") {
+                    $SD.api.getGlobalSettings($SD.uuid);
+                }
+            });
+
+            if (typeof $SD !== "undefined" && $SD.api && typeof $SD.api.getGlobalSettings === "function") {
+                $SD.api.getGlobalSettings($SD.uuid);
+            }
+        });
+
+        if (typeof $SD !== "undefined") {
+            $SD.on("didReceiveGlobalSettings", function(jsonObj) {
+                piGlobalSettings = jsonObj.payload && jsonObj.payload.settings ? jsonObj.payload.settings : {};
+                updateThemeButtonLabel();
+            });
+        }
+    })();
+</script>
+</body>
+
+</html>

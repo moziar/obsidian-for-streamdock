@@ -42,12 +42,17 @@ $SD.on('didReceiveGlobalSettings', (jsonObj) => {
     globalSettings = settings;
 });
 
-// 请求获取全局设置
-$SD.api.common.getGlobalSettings($SD.uuid);
+//监听来自 PI 的消息（toggle-color-scheme action）
+$SD.on('com.moz.obsidian-for-streamdock.toggle-color-scheme.sendToPlugin', (jsonObj) => handleSendToPlugin(jsonObj));
 
 function connected(jsn) {
+    if ($SD && $SD.api && typeof $SD.api.getGlobalSettings === 'function') {
+        $SD.api.getGlobalSettings($SD.uuid);
+    }
+
     const events = [
         { event: 'com.moz.obsidian-for-streamdock.run-command.keyDown', handler: runCommand },
+        { event: 'com.moz.obsidian-for-streamdock.toggle-color-scheme.keyDown', handler: toggleColorSchemeKeyDown },
         { event: 'com.moz.obsidian-for-streamdock.open-note.keyDown', handler: openNote },
         { event: 'com.moz.obsidian-for-streamdock.open-vault.keyDown', handler: openVault },
         { event: 'com.moz.obsidian-for-streamdock.daily-note.keyDown', handler: dailyNote },
@@ -72,6 +77,16 @@ function connected(jsn) {
     });
 }
 
+function handleSendToPlugin(jsonObj) {
+    const payload = jsonObj.payload || {};
+    const message = payload.property_inspector;
+    if (!message || !message.type) return;
+    if (message.type === 'toggleColorScheme') {
+        const context = payload.targetContext || jsonObj.context;
+        toggleColorSchemeSync(context);
+    }
+}
+
 /**
  * @param {{
  *   context: string,
@@ -92,6 +107,34 @@ function runCommand(data) {
     const command = data.payload.settings.command || '';
     const urlPrefix = getUrlPrefix(data);
     const defaultUrl = `${urlPrefix}/commands/${command}`;
+    executeSimpleCommand(data, defaultUrl);
+}
+
+// 校对亮色/暗色模式
+function toggleColorSchemeSync(context) {
+    const hasIsDarkMode = Object.prototype.hasOwnProperty.call(globalSettings, 'isDarkMode');
+    const currentIsDarkMode = hasIsDarkMode ? !!globalSettings.isDarkMode : false;
+    const nextIsDarkMode = !currentIsDarkMode;
+
+    setState(context, nextIsDarkMode ? 1 : 0);
+
+    globalSettings = Object.assign({}, globalSettings, { isDarkMode: nextIsDarkMode });
+
+    if ($SD && $SD.api && typeof $SD.api.setGlobalSettings === 'function') {
+        $SD.api.setGlobalSettings($SD.uuid, globalSettings);
+    }
+}
+
+//切换亮色/暗色模式
+function toggleColorSchemeKeyDown(data) {
+    const { context } = data;
+
+    toggleColorSchemeSync(context);
+
+    const command = 'theme:toggle-light-dark';
+    const urlPrefix = getUrlPrefix(data);
+    const defaultUrl = `${urlPrefix}/commands/${command}`;
+
     executeSimpleCommand(data, defaultUrl);
 }
 
@@ -779,4 +822,12 @@ function stringify(input) {
         return input.toString();
     }
     return JSON.stringify(input, null, 2);
+}
+
+/**
+ * @param {string} context
+ * @param {number} state
+ */
+function setState(context, state) {
+    $SD.api.setState(context, state);
 }
