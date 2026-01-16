@@ -1,7 +1,13 @@
+# enObsidian
+[![GitHub Release](https://img.shields.io/github/v/release/moziar/obsidian-for-streamdock)](https://github.com/moziar/obsidian-for-streamdock/releases/latest)
+[![Mirabox Space](https://img.shields.io/badge/Mirabox_Space-Download-%237c66d2)](https://space.key123.vip/product?id=20250604000924)
+[![Total Downloads](https://img.shields.io/github/downloads/moziar/obsidian-for-streamdock/total?label=Total%20Downloads)](https://github.com/moziar/obsidian-for-streamdock/releases)
+[![Latest Downloads](https://img.shields.io/github/downloads/moziar/obsidian-for-streamdock/latest/total?label=Latest%20Downloads)](https://github.com/moziar/obsidian-for-streamdock/releases/latest)
+[![Last Commit](https://img.shields.io/github/last-commit/moziar/obsidian-for-streamdock?label=Last%20Commit)](https://github.com/moziar/obsidian-for-streamdock/commits/master)
+
+A StreamDock plugin which could help you open notes, run obsidian commands, search notes, switch workspace and tabs, or navigate through daily and weekly notes by date. 
+
 ![](demo.png)
-
-A StreamDock plugin which could help you open notes, run obsidian commands, search notes, switch tabs or navigate through daily and weekly notes by date. 
-
 
 
 ## 🌟 Highlight
