@@ -64,6 +64,8 @@ A StreamDock plugin which could help you open notes, run obsidian commands, sear
 4. Support open note when the obsidian did not open.
 5. When `Auto Mode` is enabled, the plugin opens the note in a new pane and focuses on it if it's already open.
 
+   > See [showcase](Showcase.md#command) for inspiration.
+
 
 
 #### Open Vault
