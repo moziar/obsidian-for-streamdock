@@ -103,7 +103,7 @@
       "Name": "Toggle Color Scheme",
       "Tooltip": "切换亮色/暗色模式",
       "PropertyInspectorPath": "propertyInspector/toggle-color-scheme.html",
-      "Icon": "images/run-command_action",
+      "Icon": "images/toggle-color-scheme_action",
       "state": 0,
       "States": [
         {
