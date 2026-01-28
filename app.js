@@ -40,7 +40,7 @@ if (typeof $SD !== 'undefined') {
             return out;
         };
         
-        console.log('[App] Receive Global Settings:', redactForLog(settings));
+        // console.log('[App] Receive Global Settings:', redactForLog(settings));
         globalSettings = settings;
     });
 
@@ -202,14 +202,14 @@ function resolveVaultName(data) {
     }
 
     if (pageVault) {
-        if (presetVault && presetVault !== pageVault) {
-            console.warn('[Vault] PageSetting overrides VaultID preset:', {
-                action: data.action,
-                vault_id: pageSettings.vault_id,
-                pageVault: '[set]',
-                presetVault: '[set]'
-            });
-        }
+        // if (presetVault && presetVault !== pageVault) {
+        //     console.warn('[Vault] PageSetting overrides VaultID preset:', {
+        //         action: data.action,
+        //         vault_id: pageSettings.vault_id,
+        //         pageVault: '[set]',
+        //         presetVault: '[set]'
+        //     });
+        // }
         return pageVault;
     }
 
@@ -261,15 +261,15 @@ function openNote(data) {
     const pageVaultRaw = pageSettings.vault;
     const pageVaultType = pageVaultRaw === null ? 'null' : typeof pageVaultRaw;
     const hasPresetVault = !!(vaultId && globalSettings && globalSettings.vaults && globalSettings.vaults[vaultId] && globalSettings.vaults[vaultId].vault);
-    console.log('[OpenNote] resolved:', {
-        vault_id: vaultId,
-        hasPresetVault,
-        pageVaultType,
-        hasPageVault: !!pageVaultRaw,
-        resolvedVault: vault ? '[set]' : '[empty]',
-        note_path: notePath ? '[set]' : '[empty]',
-        auto_mode: autoMode === true ? true : autoMode === false ? false : undefined
-    });
+    // console.log('[OpenNote] resolved:', {
+    //     vault_id: vaultId,
+    //     hasPresetVault,
+    //     pageVaultType,
+    //     hasPageVault: !!pageVaultRaw,
+    //     resolvedVault: vault ? '[set]' : '[empty]',
+    //     note_path: notePath ? '[set]' : '[empty]',
+    //     auto_mode: autoMode === true ? true : autoMode === false ? false : undefined
+    // });
 
     if (!notePath || !vault) {
         showAlert(data.context);
@@ -295,7 +295,7 @@ function openNote(data) {
         }
     }
 
-    console.log('[OpenNote] url:', defaultUrl);
+    // console.log('[OpenNote] url:', defaultUrl);
     openUrlAndShowOk(data, defaultUrl);
 }
 
@@ -642,7 +642,7 @@ function loadWorkspace(data) {
     const vault = resolveVaultName(data) || '';
     const workspace = data.payload.settings.workspace || '';
     const vaultId = (data.payload.settings && data.payload.settings.vault_id) ? data.payload.settings.vault_id : '';
-    console.log('[LoadWorkspace] settings:', { vault_id: vaultId, vault: vault ? '[set]' : '[empty]', workspace: workspace ? '[set]' : '[empty]' });
+    // console.log('[LoadWorkspace] settings:', { vault_id: vaultId, vault: vault ? '[set]' : '[empty]', workspace: workspace ? '[set]' : '[empty]' });
 
     if (!vault || !workspace) {
         showAlert(data.context);
@@ -733,7 +733,7 @@ function getUrlPrefix(data) {
     const defaultPort = https ? '27124' : '27123';
     const actualPort = port || defaultPort;
     
-    console.log(`[App] URL prefix generated: ${protocol}://localhost:${actualPort}, HTTPS: ${https}, Port: ${actualPort}, API Key: ${apikey ? '[set]' : '[not set]'}`);
+    // console.log(`[App] URL prefix generated: ${protocol}://localhost:${actualPort}, HTTPS: ${https}, Port: ${actualPort}, API Key: ${apikey ? '[set]' : '[not set]'}`);
     
     return `${protocol}://localhost:${actualPort}`;
 }

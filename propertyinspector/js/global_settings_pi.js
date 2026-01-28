@@ -31,7 +31,7 @@ window.__piGetVaultPresetName = __piGetVaultPresetName;
 
 if (typeof $SD !== 'undefined') {
     $SD.on('connected', () => {
-        console.log('[PI] Global settings script loaded');
+        // console.log('[PI] Global settings script loaded');
         if ($SD.api && typeof $SD.api.getGlobalSettings === 'function') {
             $SD.api.getGlobalSettings($SD.uuid);
         }
@@ -42,12 +42,12 @@ if (typeof $SD !== 'undefined') {
         __piSetGlobalSettings(settings);
         const vaultIds = settings && settings.vaults && typeof settings.vaults === 'object' ? Object.keys(settings.vaults) : [];
         const hasLegacyApiKey = !!(settings && typeof settings.apikey === 'string' && settings.apikey.trim());
-        console.log('[PI] didReceiveGlobalSettings:', {
-            vaultIds,
-            hasLegacyApiKey
-        });
+        // console.log('[PI] didReceiveGlobalSettings:', {
+        //     vaultIds,
+        //     hasLegacyApiKey
+        // });
         if (window.__piDebugGlobalSettings === true) {
-            console.log('[PI] didReceiveGlobalSettings (redacted):', __piRedactForLog(settings));
+            // console.log('[PI] didReceiveGlobalSettings (redacted):', __piRedactForLog(settings));
         }
     });
 }

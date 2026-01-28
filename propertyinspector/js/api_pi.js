@@ -6,7 +6,7 @@
 
 // Ensure $SD is available
 if (typeof $SD === 'undefined') {
-    console.error('Stream Deck API not initialized');
+    // console.error('Stream Deck API not initialized');
 }
 
 let currentGlobalSettings = {};
@@ -33,7 +33,7 @@ function redactForLog(input) {
 
 function requestGlobalSettings(reason = '') {
     if (!$SD || !$SD.api || typeof $SD.api.getGlobalSettings !== 'function' || !$SD.uuid) return;
-    console.log(`[plugin-setting] getGlobalSettings ${reason}`.trim());
+    // console.log(`[plugin-setting] getGlobalSettings ${reason}`.trim());
     $SD.api.getGlobalSettings($SD.uuid);
 }
 
@@ -51,7 +51,7 @@ function saveSettingToGlobal(showFeedback = true) {
     const httpsEnabled = document.getElementById('https')?.checked;
 
     if (!vaultId) {
-        console.error('No Vault ID selected');
+        // console.error('No Vault ID selected');
         return;
     }
 
@@ -73,19 +73,19 @@ function saveSettingToGlobal(showFeedback = true) {
 
     // Persist to Stream Deck
     if ($SD && $SD.uuid) {
-        console.log(`[plugin-setting] setGlobalSettings vaultId=${vaultId}`, {
-            vault: vaultName ? '[set]' : '[empty]',
-            apikey: apiKey ? '[set]' : '[empty]',
-            port: port || '',
-            https: !!httpsEnabled
-        });
+        // console.log(`[plugin-setting] setGlobalSettings vaultId=${vaultId}`, {
+        //     vault: vaultName ? '[set]' : '[empty]',
+        //     apikey: apiKey ? '[set]' : '[empty]',
+        //     port: port || '',
+        //     https: !!httpsEnabled
+        // });
         if (typeof sendValueToPlugin === 'function') {
             sendValueToPlugin({ type: 'saveVaultSettings', vaultId, vaultSettings }, 'property_inspector');
-            console.log('[plugin-setting] sent saveVaultSettings to plugin');
+            // console.log('[plugin-setting] sent saveVaultSettings to plugin');
             setTimeout(() => requestGlobalSettings('after save (delayed)'), 250);
         } else if ($SD.api && typeof $SD.api.setGlobalSettings === 'function') {
             $SD.api.setGlobalSettings($SD.uuid, currentGlobalSettings);
-            console.log('[plugin-setting] setGlobalSettings payload (redacted):', redactForLog(currentGlobalSettings));
+            // console.log('[plugin-setting] setGlobalSettings payload (redacted):', redactForLog(currentGlobalSettings));
             requestGlobalSettings('after save');
         }
     }
@@ -117,7 +117,7 @@ function debouncedAutoSave() {
     }
     
     saveDebounceTimer = setTimeout(() => {
-        console.log('Auto-saving to global settings...');
+        // console.log('Auto-saving to global settings...');
         saveSettingToGlobal(false); // Don't show feedback for auto-save to avoid flickering
     }, 500); // 500ms debounce
 }
@@ -132,7 +132,7 @@ function updateFormFromGlobal() {
     const vaultId = vaultIdSelect.value;
     const vaults = currentGlobalSettings.vaults || {};
     const settings = vaults[vaultId] || {};
-    console.log(`[plugin-setting] updateFormFromGlobal vaultId=${vaultId}`, settings);
+    // console.log(`[plugin-setting] updateFormFromGlobal vaultId=${vaultId}`, settings);
 
     // Populate vault name
     const vaultInput = document.getElementById('vault');
@@ -208,7 +208,7 @@ if ($SD) {
 if ($SD) {
     $SD.on('didReceiveGlobalSettings', function(jsonObj) {
         currentGlobalSettings = (jsonObj && jsonObj.payload && jsonObj.payload.settings) ? jsonObj.payload.settings : {};
-        console.log('[plugin-setting] didReceiveGlobalSettings:', currentGlobalSettings);
+        // console.log('[plugin-setting] didReceiveGlobalSettings:', currentGlobalSettings);
         
         // Update form ONLY if we are on the plugin settings page
         if (document.getElementById('vault_id') && isPluginSettingPage()) {

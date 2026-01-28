@@ -56,7 +56,7 @@ function __piLogEffectiveVault(where) {
     const hasVaultIdField = !!document.getElementById('vault_id');
     if (!hasVaultField && !hasVaultIdField) return;
     const eff = __piEffectiveVault();
-    console.log('[PI] effective vault', where ? `(${where})` : '', eff);
+    // console.log('[PI] effective vault', where ? `(${where})` : '', eff);
 }
 
  /**
@@ -193,8 +193,8 @@ const updateUI = (pl) => {
 
 $SD.on('piDataChanged', (returnValue) => {
 
-    console.log('%c%s', 'color: white; background: blue}; font-size: 15px;', 'piDataChanged');
-    console.log(returnValue);
+    // console.log('%c%s', 'color: white; background: blue}; font-size: 15px;', 'piDataChanged');
+    // console.log(returnValue);
 
     if (returnValue.key === 'clickme') {
 
@@ -256,9 +256,9 @@ function autosizeTextareas() {
 
     if (sdpi_collection.hasOwnProperty('key') && sdpi_collection.key != '') {
         if (sdpi_collection.value !== undefined) {
-            console.log(sdpi_collection.key, " => ", sdpi_collection.value);
+            // console.log(sdpi_collection.key, " => ", sdpi_collection.value);
             settings[sdpi_collection.key] = sdpi_collection.value;
-            console.log('setSettings....', settings);
+            // console.log('setSettings....', settings);
             $SD.api.setSettings($SD.uuid, settings);
             __piLogEffectiveVault(`saveSettings:${sdpi_collection.key}`);
         }
@@ -278,7 +278,7 @@ function autosizeTextareas() {
   */
 
  function sendValueToPlugin(value, prop) {
-    console.log("sendValueToPlugin", value, prop);
+    // console.log("sendValueToPlugin", value, prop);
     if ($SD.connection && $SD.connection.readyState === 1) {
         const json = {
             action: $SD.actionInfo['action'],
