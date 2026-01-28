@@ -188,16 +188,21 @@ function toggleColorSchemeKeyDown(data) {
  */
 function resolveVaultName(data) {
     const pageSettings = data.payload.settings || {};
-    if (pageSettings.vault_id && globalSettings.vaults && globalSettings.vaults[pageSettings.vault_id]) {
-        const v = globalSettings.vaults[pageSettings.vault_id].vault;
-        return typeof v === 'string' ? v : '';
-    }
+    const trimNonEmpty = (v) => (typeof v === 'string' && v.trim() !== '') ? v.trim() : '';
+
+    // 旧逻辑兼容，页面配置
     if (pageSettings.vault && typeof pageSettings.vault === 'string') {
-        return pageSettings.vault;
+        const v = trimNonEmpty(pageSettings.vault);
+        if (v) return v;
     }
     if (pageSettings.vault && typeof pageSettings.vault === 'object') {
-        const v = pageSettings.vault.vault;
-        return typeof v === 'string' ? v : '';
+        const v = trimNonEmpty(pageSettings.vault.vault);
+        if (v) return v;
+    }
+
+    // v3 新逻辑，基于 Vault_ID
+    if (pageSettings.vault_id && globalSettings.vaults && globalSettings.vaults[pageSettings.vault_id]) {
+        return trimNonEmpty(globalSettings.vaults[pageSettings.vault_id].vault);
     }
     return '';
 }
@@ -677,31 +682,28 @@ function getUrlPrefix(data) {
     
     // Resolve vault settings
     let vaultSettings = {};
-    if (pageSettings.vault_id && globalSettings.vaults && globalSettings.vaults[pageSettings.vault_id]) {
-        vaultSettings = globalSettings.vaults[pageSettings.vault_id];
-    } else if (pageSettings.vault && typeof pageSettings.vault === 'object') {
+    if (pageSettings.vault && typeof pageSettings.vault === 'object') {
         vaultSettings = pageSettings.vault;
-    } else if (pageSettings.vault && typeof pageSettings.vault === 'string') {
-        // 回退：如果 pageSettings.vault 是字符串，构造一个最小对象
-        vaultSettings = { vault: pageSettings.vault };
+    } else if (pageSettings.vault_id && globalSettings.vaults && globalSettings.vaults[pageSettings.vault_id]) {
+        vaultSettings = globalSettings.vaults[pageSettings.vault_id];
     }
 
-    // 设置优先级处理：Vault设置 > 页面设置 > 全局设置 (legacy)
-    const port = vaultSettings.port || pageSettings.port || globalSettings.port;
+    // 设置优先级处理：页面设置 > Vault设置 > 全局设置 (legacy)
+    const port = pageSettings.port || vaultSettings.port || globalSettings.port;
     
     // HTTPS 状态判断
     let https;
-    if (vaultSettings.https !== undefined) {
-        https = Boolean(vaultSettings.https);
-    } else if (pageSettings.hasOwnProperty('https')) {
+    if (pageSettings.hasOwnProperty('https')) {
         https = Boolean(pageSettings.https);
+    } else if (vaultSettings.https !== undefined) {
+        https = Boolean(vaultSettings.https);
     } else if (globalSettings.hasOwnProperty('https')) {
         https = Boolean(globalSettings.https);
     } else {
         https = false;
     }
     
-    const apikey = vaultSettings.apikey || pageSettings.apikey || globalSettings.apikey;
+    const apikey = pageSettings.apikey || vaultSettings.apikey || globalSettings.apikey;
     
     const protocol = https ? 'https' : 'http';
     const defaultPort = https ? '27124' : '27123';
@@ -719,13 +721,15 @@ function getUrlPrefix(data) {
  */
 function getApiKey(data) {
     const pageSettings = data.payload.settings || {};
-    
-    // Resolve vault settings
+    const pageApiKey = (typeof pageSettings.apikey === 'string') ? pageSettings.apikey.trim() : '';
+    if (pageApiKey) return pageApiKey;
+
     if (pageSettings.vault_id && globalSettings.vaults && globalSettings.vaults[pageSettings.vault_id]) {
-        return globalSettings.vaults[pageSettings.vault_id].apikey || '';
+        const vaultApiKey = globalSettings.vaults[pageSettings.vault_id].apikey;
+        return (typeof vaultApiKey === 'string') ? vaultApiKey.trim() : '';
     }
 
-    return pageSettings.apikey || globalSettings.apikey || '';
+    return (typeof globalSettings.apikey === 'string') ? globalSettings.apikey.trim() : '';
 }
 
 function getPrefixByType(type) {
