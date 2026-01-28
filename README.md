@@ -44,6 +44,12 @@ A StreamDock plugin which could help you open notes, run obsidian commands, sear
 >
 > You could get the `API Key` from local-REST-API setting page.
 
+### Plugin Setting (v3)
+
+1. Add a **Plugin Setting** action, select a Vault ID, then fill in **Vault Name / API Key / Port / HTTPS** and click **Save**.
+2. In other actions, select the same **Vault ID** to reuse those values.
+3. Most actions no longer require entering Vault Name directly; it is resolved from the selected Vault ID.
+
 
 
 ### Keypad
