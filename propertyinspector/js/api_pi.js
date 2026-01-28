@@ -11,11 +11,38 @@ if (typeof $SD === 'undefined') {
 
 let currentGlobalSettings = {};
 
+let saveDebounceTimer = null;
+
+function isPluginSettingPage() {
+    return !!document.getElementById('save_setting_button');
+}
+
+function redactForLog(input) {
+    if (!input || typeof input !== 'object') return input;
+    if (Array.isArray(input)) return input.map(redactForLog);
+    const out = {};
+    for (const [k, v] of Object.entries(input)) {
+        if (typeof k === 'string' && k.toLowerCase() === 'apikey') {
+            out[k] = v ? '[REDACTED]' : '';
+        } else {
+            out[k] = redactForLog(v);
+        }
+    }
+    return out;
+}
+
+function requestGlobalSettings(reason = '') {
+    if (!$SD || !$SD.api || typeof $SD.api.getGlobalSettings !== 'function' || !$SD.uuid) return;
+    console.log(`[plugin-setting] getGlobalSettings ${reason}`.trim());
+    $SD.api.getGlobalSettings($SD.uuid);
+}
+
 /**
  * Save settings to global settings
  * This function collects all form values and saves them to global settings under the selected vault_id
+ * @param {boolean} showFeedback - Whether to show the "Saved!" feedback on the button
  */
-function saveSettingToGlobal() {
+function saveSettingToGlobal(showFeedback = true) {
     // Get form values from the plugin setting page
     const vaultId = document.getElementById('vault_id')?.value;
     const vaultName = document.getElementById('vault')?.value;
@@ -46,21 +73,53 @@ function saveSettingToGlobal() {
 
     // Persist to Stream Deck
     if ($SD && $SD.uuid) {
-        $SD.api.setGlobalSettings($SD.uuid, currentGlobalSettings);
-        console.log(`Settings saved to global for ${vaultId}:`, vaultSettings);
+        console.log(`[plugin-setting] setGlobalSettings vaultId=${vaultId}`, {
+            vault: vaultName ? '[set]' : '[empty]',
+            apikey: apiKey ? '[set]' : '[empty]',
+            port: port || '',
+            https: !!httpsEnabled
+        });
+        if (typeof sendValueToPlugin === 'function') {
+            sendValueToPlugin({ type: 'saveVaultSettings', vaultId, vaultSettings }, 'property_inspector');
+            console.log('[plugin-setting] sent saveVaultSettings to plugin');
+            setTimeout(() => requestGlobalSettings('after save (delayed)'), 250);
+        } else if ($SD.api && typeof $SD.api.setGlobalSettings === 'function') {
+            $SD.api.setGlobalSettings($SD.uuid, currentGlobalSettings);
+            console.log('[plugin-setting] setGlobalSettings payload (redacted):', redactForLog(currentGlobalSettings));
+            requestGlobalSettings('after save');
+        }
     }
 
     // Provide user feedback
-    const saveButton = document.getElementById('save_setting_button');
-    if (saveButton) {
-        const originalText = saveButton.textContent;
-        saveButton.textContent = 'Saved!';
-        setTimeout(() => {
-            saveButton.textContent = originalText;
-        }, 2000);
+    if (showFeedback) {
+        const saveButton = document.getElementById('save_setting_button');
+        if (saveButton) {
+            const originalText = saveButton.getAttribute('data-original-text') || saveButton.textContent;
+            if (!saveButton.hasAttribute('data-original-text')) {
+                saveButton.setAttribute('data-original-text', originalText);
+            }
+            saveButton.textContent = 'Saved!';
+            setTimeout(() => {
+                saveButton.textContent = originalText;
+            }, 2000);
+        }
     }
     
     return vaultSettings;
+}
+
+/**
+ * Debounced auto-save function
+ */
+function debouncedAutoSave() {
+    if (saveDebounceTimer) {
+        clearTimeout(saveDebounceTimer);
+    }
+    
+    saveDebounceTimer = setTimeout(() => {
+        console.log('Auto-saving to global settings...');
+        saveSettingToGlobal(false); // Don't show feedback for auto-save to avoid flickering
+    }, 500); // 500ms debounce
 }
 
 /**
@@ -73,6 +132,7 @@ function updateFormFromGlobal() {
     const vaultId = vaultIdSelect.value;
     const vaults = currentGlobalSettings.vaults || {};
     const settings = vaults[vaultId] || {};
+    console.log(`[plugin-setting] updateFormFromGlobal vaultId=${vaultId}`, settings);
 
     // Populate vault name
     const vaultInput = document.getElementById('vault');
@@ -104,48 +164,62 @@ function updateFormFromGlobal() {
  */
 document.addEventListener('DOMContentLoaded', function() {
     // Check if this is the plugin-setting page specifically
-    if (document.getElementById('vault_id')) {
-        const saveButton = document.getElementById('save_setting_button');
-        if (saveButton) {
-            // Remove any existing listeners to avoid duplicates
-            const newSaveButton = saveButton.cloneNode(true);
-            saveButton.parentNode.replaceChild(newSaveButton, saveButton);
-            
-            // Add the event listener to the new button
-            newSaveButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                saveSettingToGlobal();
-            });
-        }
+    // We check for save_setting_button to ensure we are on the plugin settings page, 
+    // not on an action page that happens to have vault_id (which all actions now have)
+    const saveButton = document.getElementById('save_setting_button');
+    
+    if (document.getElementById('vault_id') && saveButton) {
+        // Remove any existing listeners to avoid duplicates
+        const newSaveButton = saveButton.cloneNode(true);
+        saveButton.parentNode.replaceChild(newSaveButton, saveButton);
+        
+        // Add the event listener to the new button
+        newSaveButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            saveSettingToGlobal();
+        });
 
         // Add change listener to vault_id dropdown to switch settings
         const vaultIdSelect = document.getElementById('vault_id');
         if (vaultIdSelect) {
             vaultIdSelect.addEventListener('change', function() {
+                if (!currentGlobalSettings || !currentGlobalSettings.vaults) {
+                    requestGlobalSettings('on vault_id change (not loaded yet)');
+                }
                 updateFormFromGlobal();
             });
         }
     }
-    
-    // Request global settings
-    if ($SD && $SD.uuid) {
-        $SD.api.getGlobalSettings($SD.uuid);
-    }
 });
+
+// Ensure we request global settings when connected
+if ($SD) {
+    $SD.on('connected', function(jsonObj) {
+        if (isPluginSettingPage()) {
+            requestGlobalSettings('on connected');
+        }
+    });
+}
 
 /**
  * Listen for global settings received event
  */
 if ($SD) {
-    $SD.on('didReceiveGlobalSettings', function(payload) {
-        currentGlobalSettings = payload.payload.settings || {};
-        console.log('Received global settings:', currentGlobalSettings);
+    $SD.on('didReceiveGlobalSettings', function(jsonObj) {
+        currentGlobalSettings = (jsonObj && jsonObj.payload && jsonObj.payload.settings) ? jsonObj.payload.settings : {};
+        console.log('[plugin-setting] didReceiveGlobalSettings:', currentGlobalSettings);
         
-        // Update form if we are on the plugin settings page
-        if (document.getElementById('vault_id')) {
+        // Update form ONLY if we are on the plugin settings page
+        if (document.getElementById('vault_id') && isPluginSettingPage()) {
             updateFormFromGlobal();
         }
+    });
+
+    $SD.on('sendToPropertyInspector', function(jsonObj) {
+        const msg = jsonObj && jsonObj.payload && jsonObj.payload.property_inspector;
+        if (!msg || msg.type !== 'globalSettingsUpdated') return;
+        requestGlobalSettings(`on plugin ack (${msg.vaultId || ''})`.trim());
     });
 }
 

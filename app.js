@@ -25,25 +25,28 @@ const NoteType = {
 $SD.on('connected', (jsonObj) => connected(jsonObj));
 $SD.on('didReceiveGlobalSettings', (jsonObj) => {
     const settings = jsonObj.payload.settings || {};
-    const safeSettings = {};
-    
-    // 复制非敏感设置项
-    for (const [key, value] of Object.entries(settings)) {
-        if (key.toLowerCase() !== 'apikey') {
-            safeSettings[key] = value;
-        } else {
-            // 对于敏感的ApiKey，只记录是否存在（不显示实际值）
-            safeSettings[key] = value ? '[REDACTED]' : undefined;
+    const redactForLog = (input) => {
+        if (!input || typeof input !== 'object') return input;
+        if (Array.isArray(input)) return input.map(redactForLog);
+        const out = {};
+        for (const [key, value] of Object.entries(input)) {
+            if (typeof key === 'string' && k.toLowerCase() === 'apikey') {
+                out[key] = value ? '[REDACTED]' : '';
+            } else {
+                out[key] = redactForLog(v);
+            }
         }
-    }
+        return out;
+    };
     
-    console.log('[App] Receive Global Settings:', safeSettings);
+    console.log('[App] Receive Global Settings:', redactForLog(settings));
 
     globalSettings = settings;
 });
 
 //监听来自 PI 的消息（toggle-color-scheme action）
 $SD.on('com.moz.obsidian-for-streamdock.toggle-color-scheme.sendToPlugin', (jsonObj) => handleSendToPlugin(jsonObj));
+$SD.on('com.moz.obsidian-for-streamdock.plugin-setting.sendToPlugin', (jsonObj) => handlePluginSettingSendToPlugin(jsonObj));
 
 function connected(jsn) {
     if ($SD && $SD.api && typeof $SD.api.getGlobalSettings === 'function') {
@@ -84,6 +87,48 @@ function handleSendToPlugin(jsonObj) {
     if (message.type === 'toggleColorScheme') {
         const context = payload.targetContext || jsonObj.context;
         toggleColorSchemeSync(context);
+    }
+}
+
+function handlePluginSettingSendToPlugin(jsonObj) {
+    const payload = jsonObj.payload || {};
+    const message = payload.property_inspector;
+    if (!message || !message.type) return;
+    if (message.type === 'saveVaultSettings') {
+        const vaultId = message.vaultId;
+        const vaultSettings = message.vaultSettings || {};
+        if (!vaultId) return;
+
+        if (!globalSettings || typeof globalSettings !== 'object') globalSettings = {};
+        if (!globalSettings.vaults || typeof globalSettings.vaults !== 'object') globalSettings.vaults = {};
+
+        globalSettings.vaults[vaultId] = {
+            vault: vaultSettings.vault || '',
+            apikey: vaultSettings.apikey || '',
+            port: vaultSettings.port || '',
+            https: !!vaultSettings.https
+        };
+
+        if ($SD && $SD.api && typeof $SD.api.setGlobalSettings === 'function') {
+            $SD.api.setGlobalSettings($SD.uuid, globalSettings);
+        }
+        if ($SD && $SD.api && typeof $SD.api.getGlobalSettings === 'function') {
+            $SD.api.getGlobalSettings($SD.uuid);
+        }
+        if ($SD && $SD.api && typeof $SD.api.sendToPropertyInspector === 'function') {
+            $SD.api.sendToPropertyInspector(
+                jsonObj.context,
+                { property_inspector: { type: 'globalSettingsUpdated', vaultId } },
+                'com.moz.obsidian-for-streamdock.plugin-setting'
+            );
+        }
+        return;
+    }
+
+    if (message.type === 'globalSettingsUpdated') {
+        if ($SD && $SD.api && typeof $SD.api.getGlobalSettings === 'function') {
+            $SD.api.getGlobalSettings($SD.uuid);
+        }
     }
 }
 
@@ -143,12 +188,18 @@ function toggleColorSchemeKeyDown(data) {
  */
 function resolveVaultName(data) {
     const pageSettings = data.payload.settings || {};
-    // Check if using Vault ID
     if (pageSettings.vault_id && globalSettings.vaults && globalSettings.vaults[pageSettings.vault_id]) {
-        return globalSettings.vaults[pageSettings.vault_id].vault;
+        const v = globalSettings.vaults[pageSettings.vault_id].vault;
+        return typeof v === 'string' ? v : '';
     }
-    // Fallback to direct vault value (legacy or override)
-    return pageSettings.vault;
+    if (pageSettings.vault && typeof pageSettings.vault === 'string') {
+        return pageSettings.vault;
+    }
+    if (pageSettings.vault && typeof pageSettings.vault === 'object') {
+        const v = pageSettings.vault.vault;
+        return typeof v === 'string' ? v : '';
+    }
+    return '';
 }
 
 /**
@@ -399,7 +450,11 @@ function webZoomReset(data) {
 
 function openUrlAndShowOk(data, url) {
     // 这里会对所有 URI 类操作进行统一的非空判断
-    if (!data.payload.settings.vault) {
+    // v3.x: vault name 可能来自 globalSettings.vaults[vault_id]，不一定存在于 pageSettings.vault
+    const vault = resolveVaultName(data);
+    if (!vault) {
+        const vaultId = (data.payload.settings && data.payload.settings.vault_id) ? data.payload.settings.vault_id : '';
+        console.warn('[URI] missing vault:', { action: data.action, vault_id: vaultId, hasVaults: !!(globalSettings && globalSettings.vaults) });
         showAlert(data.context);
         return;
     }
@@ -548,7 +603,7 @@ function noteFinder(data) {
  *   context: string,
  *   payload: {
  *     settings: {
- *       vault?: string,
+ *       vault?: string|null,
  *       workspace?: string
  *     }
  *   },
@@ -557,6 +612,8 @@ function noteFinder(data) {
 function loadWorkspace(data) {
     const vault = resolveVaultName(data) || '';
     const workspace = data.payload.settings.workspace || '';
+    const vaultId = (data.payload.settings && data.payload.settings.vault_id) ? data.payload.settings.vault_id : '';
+    console.log('[LoadWorkspace] settings:', { vault_id: vaultId, vault: vault ? '[set]' : '[empty]', workspace: workspace ? '[set]' : '[empty]' });
 
     if (!vault || !workspace) {
         showAlert(data.context);
@@ -582,7 +639,7 @@ function loadWorkspace(data) {
  * }} data
  */
 function settingsNavigator(data) {
-    const vault = data.payload.settings.vault || '';
+    const vault = resolveVaultName(data) || '';
     const plugin_id = data.payload.settings.plugin_id || '';
 
     if (!vault || !plugin_id) {
@@ -622,6 +679,11 @@ function getUrlPrefix(data) {
     let vaultSettings = {};
     if (pageSettings.vault_id && globalSettings.vaults && globalSettings.vaults[pageSettings.vault_id]) {
         vaultSettings = globalSettings.vaults[pageSettings.vault_id];
+    } else if (pageSettings.vault && typeof pageSettings.vault === 'object') {
+        vaultSettings = pageSettings.vault;
+    } else if (pageSettings.vault && typeof pageSettings.vault === 'string') {
+        // 回退：如果 pageSettings.vault 是字符串，构造一个最小对象
+        vaultSettings = { vault: pageSettings.vault };
     }
 
     // 设置优先级处理：Vault设置 > 页面设置 > 全局设置 (legacy)

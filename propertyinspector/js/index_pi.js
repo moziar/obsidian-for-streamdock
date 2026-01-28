@@ -68,9 +68,12 @@ $SD.on('connected', (jsn) => {
      * const foundObject = Utils.getProp(JSON-OBJECT, 'path.to.target', defaultValueIfNotFound)
      */
 
-    settings = Utils.getProp(jsn, 'actionInfo.payload.settings', false);
-    if (settings) {
-        updateUI(settings);
+    settings = Utils.getProp(jsn, 'actionInfo.payload.settings', {}) || {};
+    updateUI(settings);
+    const vaultIdSelect = document.getElementById('vault_id');
+    if (vaultIdSelect && !Object.prototype.hasOwnProperty.call(settings, 'vault_id')) {
+        settings.vault_id = vaultIdSelect.value;
+        $SD.api.setSettings($SD.uuid, settings);
     }
     autosizeTextareas();
 });
