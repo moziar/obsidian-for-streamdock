@@ -139,6 +139,19 @@ function toggleColorSchemeKeyDown(data) {
 }
 
 /**
+ * Helper to resolve vault name from settings (supports new Vault ID and legacy direct value)
+ */
+function resolveVaultName(data) {
+    const pageSettings = data.payload.settings || {};
+    // Check if using Vault ID
+    if (pageSettings.vault_id && globalSettings.vaults && globalSettings.vaults[pageSettings.vault_id]) {
+        return globalSettings.vaults[pageSettings.vault_id].vault;
+    }
+    // Fallback to direct vault value (legacy or override)
+    return pageSettings.vault;
+}
+
+/**
  * @param {{
  *   context: string,
  *   payload: {
@@ -149,7 +162,7 @@ function toggleColorSchemeKeyDown(data) {
  * }} data
  */
 function openVault(data) {
-    const vault = data.payload.settings.vault;
+    const vault = resolveVaultName(data);
 
     if (!vault) {
         showAlert(data.context);
@@ -175,7 +188,7 @@ function openVault(data) {
  * }} data
  */
 function openNote(data) {
-    const vault = data.payload.settings.vault;
+    const vault = resolveVaultName(data);
     const notePath = data.payload.settings.note_path || '';
     const autoMode = data.payload.settings.auto_mode;
 
@@ -218,7 +231,7 @@ function openNote(data) {
  * }} data
  */
 function dailyNote(data) {
-    const vault = data.payload.settings.vault || '';
+    const vault = resolveVaultName(data) || '';
     const autoMode = data.payload.settings.auto_mode;
 
     if (!vault) {
@@ -485,7 +498,7 @@ function dialRotate(data, positiveCommand, negativeCommand) {
  * }} data
  */
 function noteFinder(data) {
-    const vault = data.payload.settings.vault || '';
+    const vault = resolveVaultName(data) || '';
     const type = data.payload.settings.type || SearchType.ALL;
     let query = data.payload.settings.query || '';
     const property_key = data.payload.settings.property_key || '';
@@ -542,7 +555,7 @@ function noteFinder(data) {
  * }} data
  */
 function loadWorkspace(data) {
-    const vault = data.payload.settings.vault || '';
+    const vault = resolveVaultName(data) || '';
     const workspace = data.payload.settings.workspace || '';
 
     if (!vault || !workspace) {
@@ -605,12 +618,20 @@ function getUrlPrefix(data) {
     // 获取页面设置
     const pageSettings = data.payload.settings || {};
     
-    // 设置优先级处理：页面设置 > 全局设置 > 默认值
-    const port = pageSettings.port || globalSettings.port;
+    // Resolve vault settings
+    let vaultSettings = {};
+    if (pageSettings.vault_id && globalSettings.vaults && globalSettings.vaults[pageSettings.vault_id]) {
+        vaultSettings = globalSettings.vaults[pageSettings.vault_id];
+    }
+
+    // 设置优先级处理：Vault设置 > 页面设置 > 全局设置 (legacy)
+    const port = vaultSettings.port || pageSettings.port || globalSettings.port;
     
-    // HTTPS 状态判断：如果页面设置中有 https 属性，使用页面设置；否则使用全局设置；最后默认为 false
+    // HTTPS 状态判断
     let https;
-    if (pageSettings.hasOwnProperty('https')) {
+    if (vaultSettings.https !== undefined) {
+        https = Boolean(vaultSettings.https);
+    } else if (pageSettings.hasOwnProperty('https')) {
         https = Boolean(pageSettings.https);
     } else if (globalSettings.hasOwnProperty('https')) {
         https = Boolean(globalSettings.https);
@@ -618,7 +639,7 @@ function getUrlPrefix(data) {
         https = false;
     }
     
-    const apikey = pageSettings.apikey || globalSettings.apikey;
+    const apikey = vaultSettings.apikey || pageSettings.apikey || globalSettings.apikey;
     
     const protocol = https ? 'https' : 'http';
     const defaultPort = https ? '27124' : '27123';
@@ -630,12 +651,18 @@ function getUrlPrefix(data) {
 }
 
 /**
- * 获取API Key，支持设置优先级：页面设置 > 全局设置
+ * 获取API Key，支持设置优先级：Vault设置 > 页面设置 > 全局设置
  * @param {object} data - 请求数据
  * @returns {string} API Key
  */
 function getApiKey(data) {
     const pageSettings = data.payload.settings || {};
+    
+    // Resolve vault settings
+    if (pageSettings.vault_id && globalSettings.vaults && globalSettings.vaults[pageSettings.vault_id]) {
+        return globalSettings.vaults[pageSettings.vault_id].apikey || '';
+    }
+
     return pageSettings.apikey || globalSettings.apikey || '';
 }
 

@@ -7,7 +7,7 @@
           name=viewport>
     <meta content=yes name=apple-mobile-web-app-capable>
     <meta content=black name=apple-mobile-web-app-status-bar-style>
-    <title>com.moz.obsidian-for-streamdock.open-note</title>
+    <title>com.moz.obsidian-for-streamdock.plugin-setting</title>
     <link href="css/pi.css" rel="stylesheet">
 </head>
 
@@ -24,35 +24,38 @@
         </select>
     </div>
 
-    <details>
-        <summary>Legacy Setting</summary>
-        <div class="sdpi-item" title="Enter the vault name" type="textarea">
-            <div class="sdpi-item-label" data-localize="Vault Name">Vault</div>
-            <input class="sdpi-item-value" id="vault" required type="text" value="">
-        </div>
-    </details>
+    <div class="sdpi-item" title="Enter the vault name" type="textarea">
+        <div class="sdpi-item-label" data-localize="Vault Name">Vault Name</div>
+        <input class="sdpi-item-value" id="vault" required type="text" value="">
+    </div>
+
+    <div class="sdpi-item" title="Enter the API Key" type="textarea">
+        <div class="sdpi-item-label" data-localize="API Key">API Key</div>
+        <span class="sdpi-item-value textarea">
+        <textarea id="apikey" placeholder="" required rows="3" type="textarea"></textarea>
+      </span>
+    </div>
 
     <div class="sdpi-item">
-        <div class="sdpi-item-label" data-localize="Note Path">Note Path</div>
-        <input class="sdpi-item-value" id="note_path" required type="text" value="">
+        <div class="sdpi-item-label" data-localize="Port">Port</div>
+        <input class="sdpi-item-value" id="port" type="number" value="">
     </div>
 
     <div class="sdpi-item" id="single_check" type="checkbox">
-        <div class="sdpi-item-label">Auto Mode</div>
+        <div class="sdpi-item-label">Https</div>
         <div class="sdpi-item-value">
-            <input id="auto_mode" type="checkbox">
-            <label for="auto_mode"><span></span>Enable</label>
+            <input id="https" type="checkbox">
+            <label for="https"><span></span>Enable</label>
         </div>
+    </div>
+
+    <div class="sdpi-item" id="color_scheme_toggle">
+        <button class="sdpi-item-value full-width" id="save_setting_button">Save</button>
     </div>
 
     <div class="sdpi-heading">Support</div>
     <div>
-        Support both relative path and unique file name. <br>
-        Files that aren't in .md format must have an extension.<br>
-        <br>
-        When Auto Mode is enabled, the plugin opens the note in a new pane and focuses on it if it's already open. <br>
-        Please install the companion <a data-open-url="https://obsidian.md/plugins?id=obsidian-advanced-uri">Obsidian
-        Advanced URI plugin</a> to make Auto Mode work!<br>
+        Please install the companion <a data-open-url="https://obsidian.md/plugins?id=obsidian-local-rest-api">Local REST API plugin</a> and <a data-open-url="https://obsidian.md/plugins?id=obsidian-advanced-uri">Advanced URI plugin</a> to make this plugin work!<br>
         <br>
         <a data-open-url="https://github.com/moziar/obsidian-for-streamdock">Documentation</a>
     </div>
@@ -64,6 +67,7 @@
 <script src="js/common_pi.js"></script>
 <script src="js/index_pi.js"></script>
 <script src="js/global_settings_pi.js"></script>
+<script src="js/api_pi.js"></script>
 </body>
 
 </html>

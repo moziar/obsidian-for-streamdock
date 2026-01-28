@@ -147,6 +147,20 @@
       ]
     },
     {
+      "UUID": "com.moz.obsidian-for-streamdock.plugin-setting",
+      "Name": "Plugin Setting",
+      "Tooltip": "插件设置",
+      "PropertyInspectorPath": "propertyInspector/plugin-setting.html",
+      "Icon": "images/settings-navigator_action",
+      "States": [
+        {
+          "FontSize": "11",
+          "Title": "Plugin Set",
+          "Image": "images/settings-navigator"
+        }
+      ]
+    },
+    {
       "UUID": "com.moz.obsidian-for-streamdock.switch-tab",
       "Name": "Switch Tab",
       "PropertyInspectorPath": "propertyInspector/switch-tab.html",

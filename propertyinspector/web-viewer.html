@@ -23,20 +23,29 @@
 
 <body>
 <div class="sdpi-wrapper">
-    <div class="sdpi-item" title="Enter the API Key" type="textarea">
-        <div class="sdpi-item-label" data-localize="API Key">API Key</div>
-        <span class="sdpi-item-value textarea">
-            <textarea id="apikey" placeholder="" required rows="3" type="textarea"></textarea>
-        </span>
+    <div class="sdpi-item">
+        <div class="sdpi-item-label" data-localize="Vault-ID">Vault ID</div>
+        <select class="sdpi-item-value select" id="vault_id">
+            <option selected value="Vault1">Vault 1</option>
+            <option value="Vault2">Vault 2</option>
+            <option value="Vault3">Vault 3</option>
+            <option value="Vault4">Vault 4</option>
+            <option value="Vault5">Vault 5</option>
+        </select>
     </div>
 
     <details>
-        <summary>Customize</summary>
+        <summary>Legacy Setting</summary>
+        <div class="sdpi-item" title="Enter the API Key" type="textarea">
+            <div class="sdpi-item-label" data-localize="API Key">API Key</div>
+            <span class="sdpi-item-value textarea">
+            <textarea id="apikey" placeholder="" required rows="3" type="textarea"></textarea>
+          </span>
+        </div>
         <div class="sdpi-item">
             <div class="sdpi-item-label" data-localize="Port">Port</div>
             <input class="sdpi-item-value" id="port" type="number" value="">
         </div>
-
         <div class="sdpi-item" id="single_check" type="checkbox">
             <div class="sdpi-item-label">Https</div>
             <div class="sdpi-item-value">
