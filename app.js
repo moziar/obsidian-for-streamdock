@@ -22,31 +22,31 @@ const NoteType = {
     YEARLY: 'Yearly',
 };
 
-$SD.on('connected', (jsonObj) => connected(jsonObj));
-$SD.on('didReceiveGlobalSettings', (jsonObj) => {
-    const settings = jsonObj.payload.settings || {};
-    const redactForLog = (input) => {
-        if (!input || typeof input !== 'object') return input;
-        if (Array.isArray(input)) return input.map(redactForLog);
-        const out = {};
-        for (const [key, value] of Object.entries(input)) {
-            if (typeof key === 'string' && k.toLowerCase() === 'apikey') {
-                out[key] = value ? '[REDACTED]' : '';
-            } else {
-                out[key] = redactForLog(v);
+if (typeof $SD !== 'undefined') {
+    $SD.on('connected', (jsonObj) => connected(jsonObj));
+    $SD.on('didReceiveGlobalSettings', (jsonObj) => {
+        const settings = (jsonObj && jsonObj.payload && jsonObj.payload.settings) ? jsonObj.payload.settings : {};
+        const redactForLog = (input) => {
+            if (!input || typeof input !== 'object') return input;
+            if (Array.isArray(input)) return input.map(redactForLog);
+            const out = {};
+            for (const [k, v] of Object.entries(input)) {
+                if (typeof k === 'string' && k.toLowerCase() === 'apikey') {
+                    out[k] = v ? '[REDACTED]' : '';
+                } else {
+                    out[k] = redactForLog(v);
+                }
             }
-        }
-        return out;
-    };
-    
-    console.log('[App] Receive Global Settings:', redactForLog(settings));
+            return out;
+        };
+        
+        console.log('[App] Receive Global Settings:', redactForLog(settings));
+        globalSettings = settings;
+    });
 
-    globalSettings = settings;
-});
-
-//监听来自 PI 的消息（toggle-color-scheme action）
-$SD.on('com.moz.obsidian-for-streamdock.toggle-color-scheme.sendToPlugin', (jsonObj) => handleSendToPlugin(jsonObj));
-$SD.on('com.moz.obsidian-for-streamdock.plugin-setting.sendToPlugin', (jsonObj) => handlePluginSettingSendToPlugin(jsonObj));
+    $SD.on('com.moz.obsidian-for-streamdock.toggle-color-scheme.sendToPlugin', (jsonObj) => handleSendToPlugin(jsonObj));
+    $SD.on('com.moz.obsidian-for-streamdock.plugin-setting.sendToPlugin', (jsonObj) => handlePluginSettingSendToPlugin(jsonObj));
+}
 
 function connected(jsn) {
     if ($SD && $SD.api && typeof $SD.api.getGlobalSettings === 'function') {
@@ -191,21 +191,29 @@ function resolveVaultName(data) {
     const pageSettings = data.payload.settings || {};
     const trimNonEmpty = (v) => (typeof v === 'string' && v.trim() !== '') ? v.trim() : '';
 
-    // 旧逻辑兼容，页面配置
-    if (pageSettings.vault && typeof pageSettings.vault === 'string') {
-        const v = trimNonEmpty(pageSettings.vault);
-        if (v) return v;
-    }
-    if (pageSettings.vault && typeof pageSettings.vault === 'object') {
-        const v = trimNonEmpty(pageSettings.vault.vault);
-        if (v) return v;
+    const pageVault =
+        (pageSettings.vault && typeof pageSettings.vault === 'string') ? trimNonEmpty(pageSettings.vault)
+            : (pageSettings.vault && typeof pageSettings.vault === 'object') ? trimNonEmpty(pageSettings.vault.vault)
+                : '';
+
+    let presetVault = '';
+    if (pageSettings.vault_id && globalSettings.vaults && globalSettings.vaults[pageSettings.vault_id]) {
+        presetVault = trimNonEmpty(globalSettings.vaults[pageSettings.vault_id].vault);
     }
 
-    // v3 新逻辑，基于 Vault_ID
-    if (pageSettings.vault_id && globalSettings.vaults && globalSettings.vaults[pageSettings.vault_id]) {
-        return trimNonEmpty(globalSettings.vaults[pageSettings.vault_id].vault);
+    if (pageVault) {
+        if (presetVault && presetVault !== pageVault) {
+            console.warn('[Vault] PageSetting overrides VaultID preset:', {
+                action: data.action,
+                vault_id: pageSettings.vault_id,
+                pageVault: '[set]',
+                presetVault: '[set]'
+            });
+        }
+        return pageVault;
     }
-    return '';
+
+    return presetVault || '';
 }
 
 /**
@@ -248,6 +256,20 @@ function openNote(data) {
     const vault = resolveVaultName(data);
     const notePath = data.payload.settings.note_path || '';
     const autoMode = data.payload.settings.auto_mode;
+    const pageSettings = data.payload.settings || {};
+    const vaultId = pageSettings.vault_id || '';
+    const pageVaultRaw = pageSettings.vault;
+    const pageVaultType = pageVaultRaw === null ? 'null' : typeof pageVaultRaw;
+    const hasPresetVault = !!(vaultId && globalSettings && globalSettings.vaults && globalSettings.vaults[vaultId] && globalSettings.vaults[vaultId].vault);
+    console.log('[OpenNote] resolved:', {
+        vault_id: vaultId,
+        hasPresetVault,
+        pageVaultType,
+        hasPageVault: !!pageVaultRaw,
+        resolvedVault: vault ? '[set]' : '[empty]',
+        note_path: notePath ? '[set]' : '[empty]',
+        auto_mode: autoMode === true ? true : autoMode === false ? false : undefined
+    });
 
     if (!notePath || !vault) {
         showAlert(data.context);
@@ -273,6 +295,7 @@ function openNote(data) {
         }
     }
 
+    console.log('[OpenNote] url:', defaultUrl);
     openUrlAndShowOk(data, defaultUrl);
 }
 
@@ -924,4 +947,17 @@ function stringify(input) {
  */
 function setState(context, state) {
     $SD.api.setState(context, state);
+}
+
+function __setGlobalSettingsForTest(nextSettings) {
+    globalSettings = nextSettings || {};
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        resolveVaultName,
+        getUrlPrefix,
+        getApiKey,
+        __setGlobalSettingsForTest
+    };
 }

@@ -35,6 +35,30 @@ let sdpiWrapper = document.querySelector('.sdpi-wrapper');
 
 let settings;
 
+function __piTrimNonEmpty(v) {
+    return (typeof v === 'string' && v.trim() !== '') ? v.trim() : '';
+}
+
+function __piEffectiveVault() {
+    const pageVault =
+        (settings && typeof settings.vault === 'string') ? __piTrimNonEmpty(settings.vault)
+            : (settings && settings.vault && typeof settings.vault === 'object') ? __piTrimNonEmpty(settings.vault.vault)
+                : '';
+    if (pageVault) return { source: 'page', vault: pageVault };
+    const vaultId = settings && typeof settings.vault_id === 'string' ? __piTrimNonEmpty(settings.vault_id) : '';
+    const presetVault = typeof window.__piGetVaultPresetName === 'function' ? __piTrimNonEmpty(window.__piGetVaultPresetName(vaultId)) : '';
+    if (presetVault) return { source: 'preset', vault: presetVault, vaultId };
+    return { source: 'none', vault: '', vaultId };
+}
+
+function __piLogEffectiveVault(where) {
+    const hasVaultField = !!document.getElementById('vault');
+    const hasVaultIdField = !!document.getElementById('vault_id');
+    if (!hasVaultField && !hasVaultIdField) return;
+    const eff = __piEffectiveVault();
+    console.log('[PI] effective vault', where ? `(${where})` : '', eff);
+}
+
  /**
   * The 'connected' event is the first event sent to Property Inspector, after it's instance
   * is registered with Stream Deck software. It carries the current websocket, settings,
@@ -75,6 +99,7 @@ $SD.on('connected', (jsn) => {
         settings.vault_id = vaultIdSelect.value;
         $SD.api.setSettings($SD.uuid, settings);
     }
+    __piLogEffectiveVault('connected');
     autosizeTextareas();
 });
 
@@ -235,6 +260,7 @@ function autosizeTextareas() {
             settings[sdpi_collection.key] = sdpi_collection.value;
             console.log('setSettings....', settings);
             $SD.api.setSettings($SD.uuid, settings);
+            __piLogEffectiveVault(`saveSettings:${sdpi_collection.key}`);
         }
     }
  }
