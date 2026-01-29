@@ -18,10 +18,6 @@
     "Name": "Note Finder",
     "Tooltip": "搜索笔记"
   },
-  "com.moz.obsidian-for-streamdock.run-command": {
-    "Name": "Run Command",
-    "Tooltip": "运行 Obsidian 中的命令"
-  },
   "com.moz.obsidian-for-streamdock.web-viewer": {
     "Name": "Web Viewer",
     "Tooltip": "打开 Obsidian Web Viewer"
@@ -30,6 +26,14 @@
     "Name": "Web Searcher",
     "Tooltip": "打开网络搜索"
   },
+  "com.moz.obsidian-for-streamdock.run-command": {
+    "Name": "Run Command",
+    "Tooltip": "运行 Obsidian 中的命令"
+  },
+  "com.moz.obsidian-for-streamdock.toggle-color-scheme": {
+    "Name": "Toggle Color Scheme",
+    "Tooltip": "切换亮色/暗色模式"
+  },
   "com.moz.obsidian-for-streamdock.load-workspace": {
     "Name": "Load Workspace",
     "Tooltip": "加载 Workspace"
@@ -37,6 +41,10 @@
   "com.moz.obsidian-for-streamdock.settings-navigator": {
     "Name": "Settings Navigator",
     "Tooltip": "插件设置页导航"
+  },
+  "com.moz.obsidian-for-streamdock.plugin-setting": {
+    "Name": "Plugin Setting",
+    "Tooltip": "enObsidian 插件设置"
   },
   "com.moz.obsidian-for-streamdock.switch-tab": {
     "Name": "Switch Tab",
