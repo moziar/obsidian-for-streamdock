@@ -10,6 +10,10 @@
     "Name": "Open Note",
     "Tooltip": "Open specific Obsidian Note"
   },
+  "com.moz.obsidian-for-streamdock.vault-switcher": {
+    "Name": "Vault Switcher",
+    "Tooltip": "Open Obsidian Vault Switcher"
+  },
   "com.moz.obsidian-for-streamdock.open-vault": {
     "Name": "Open Vault",
     "Tooltip": "Open Obsidian Vault"
