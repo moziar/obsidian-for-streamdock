@@ -57,6 +57,7 @@ function connected(jsn) {
         { event: 'com.moz.obsidian-for-streamdock.run-command.keyDown', handler: runCommand },
         { event: 'com.moz.obsidian-for-streamdock.toggle-color-scheme.keyDown', handler: toggleColorSchemeKeyDown },
         { event: 'com.moz.obsidian-for-streamdock.open-note.keyDown', handler: openNote },
+        { event: 'com.moz.obsidian-for-streamdock.vault-switcher.keyDown', handler: vaultSwitcher },
         { event: 'com.moz.obsidian-for-streamdock.open-vault.keyDown', handler: openVault },
         { event: 'com.moz.obsidian-for-streamdock.daily-note.keyDown', handler: dailyNote },
         { event: 'com.moz.obsidian-for-streamdock.web-viewer.keyDown', handler: webViewer },
@@ -214,6 +215,18 @@ function resolveVaultName(data) {
     }
 
     return presetVault || '';
+}
+
+/**
+ * @param {{
+ *   context: string,
+ * }} data
+ */
+function vaultSwitcher(data) {
+    let defaultUrl = `obsidian://choose-vault?`;
+
+    openUrl(data.context, defaultUrl);
+    showOk(data.context);
 }
 
 /**

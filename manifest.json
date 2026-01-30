@@ -29,6 +29,19 @@
       ]
     },
     {
+      "UUID": "com.moz.obsidian-for-streamdock.vault-switcher",
+      "Name": "Vault Switcher",
+      "Tooltip": "打开笔记库切换面板",
+      "Icon": "images/vault-switcher_action",
+      "States": [
+        {
+          "FontSize": "11",
+          "Title": "Vault Pane",
+          "Image": "images/vault-switcher"
+        }
+      ]
+    },
+    {
       "UUID": "com.moz.obsidian-for-streamdock.open-vault",
       "Name": "Open Vault",
       "Tooltip": "打开笔记库",
