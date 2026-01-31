@@ -318,7 +318,8 @@ function openNote(data) {
  *   payload: {
  *     settings: {
  *       vault?: string,
- *       auto_mode?: boolean
+ *       auto_mode?: boolean,
+ *       pane_type?: string | null
  *     }
  *   },
  * }} data
@@ -326,6 +327,7 @@ function openNote(data) {
 function dailyNote(data) {
     const vault = resolveVaultName(data) || '';
     const autoMode = data.payload.settings.auto_mode;
+    const paneType = data.payload.settings.pane_type || '';
 
     if (!vault) {
         showAlert(data.context);
@@ -337,7 +339,14 @@ function dailyNote(data) {
     
     // 直接使用布尔值检查
     if (autoMode === false) {
-        // 使用默认的 obsidian://daily 协议
+        if (paneType) {
+            if (paneType === 'current'){
+                // 使用默认的 obsidian://daily 协议
+            }
+        } else {
+            // 支持 paneType 定义打开方式
+            defaultUrl += `&paneType=${paneType}`;
+        }
     } else if (autoMode === true) {
         defaultUrl = `obsidian://adv-uri?vault=${encodedVault}&daily=true&openmode=true`;
     }
