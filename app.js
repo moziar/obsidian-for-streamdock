@@ -269,7 +269,7 @@ function openVault(data) {
 function openNote(data) {
     const vault = resolveVaultName(data);
     const notePath = data.payload.settings.note_path || '';
-    const autoMode = data.payload.settings.auto_mode | false;
+    const autoMode = data.payload.settings.auto_mode || false;
     const paneType = data.payload.settings.pane_type || '';
     const pageSettings = data.payload.settings || {};
     const vaultId = pageSettings.vault_id || '';
@@ -336,7 +336,7 @@ function openNote(data) {
  */
 function dailyNote(data) {
     const vault = resolveVaultName(data) || '';
-    const autoMode = data.payload.settings.auto_mode | false;
+    const autoMode = data.payload.settings.auto_mode || false;
     const paneType = data.payload.settings.pane_type;
 
     if (!vault) {
