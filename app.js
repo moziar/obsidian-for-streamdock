@@ -260,7 +260,8 @@ function openVault(data) {
  *     settings: {
  *     vault?: string,
  *     note_path?: string,
- *     auto_mode?: boolean
+ *     auto_mode?: boolean,
+ *     pane_type?: string
  *     }
  *   },
  * }} data
@@ -268,7 +269,8 @@ function openVault(data) {
 function openNote(data) {
     const vault = resolveVaultName(data);
     const notePath = data.payload.settings.note_path || '';
-    const autoMode = data.payload.settings.auto_mode;
+    const autoMode = data.payload.settings.auto_mode | false;
+    const paneType = data.payload.settings.pane_type || '';
     const pageSettings = data.payload.settings || {};
     const vaultId = pageSettings.vault_id || '';
     const pageVaultRaw = pageSettings.vault;
@@ -294,8 +296,16 @@ function openNote(data) {
 
     let defaultUrl = `obsidian://open?vault=${encodedVault}&file=${encodedNotePath}`
 
+    // 直接使用布尔值检查
     if (autoMode === false) {
-        // 使用默认的 obsidian://open 协议
+        if (paneType) {
+            if (paneType === 'current'){
+                // 使用默认的 obsidian://open 协议
+            } else {
+                // 支持 paneType 定义打开方式
+                defaultUrl += `&paneType=${paneType}`;
+            }
+        }
     } else if (autoMode === true) {
         // 区分路径和文件名
         // 如果包含路径分隔符，认为是路径；否则认为是文件名
@@ -319,15 +329,15 @@ function openNote(data) {
  *     settings: {
  *       vault?: string,
  *       auto_mode?: boolean,
- *       pane_type?: string | null
+ *       pane_type?: string
  *     }
  *   },
  * }} data
  */
 function dailyNote(data) {
     const vault = resolveVaultName(data) || '';
-    const autoMode = data.payload.settings.auto_mode;
-    const paneType = data.payload.settings.pane_type || '';
+    const autoMode = data.payload.settings.auto_mode | false;
+    const paneType = data.payload.settings.pane_type;
 
     if (!vault) {
         showAlert(data.context);
@@ -339,10 +349,8 @@ function dailyNote(data) {
     
     // 直接使用布尔值检查
     if (autoMode === false) {
-        if (paneType) {
-            if (paneType === 'current'){
-                // 使用默认的 obsidian://daily 协议
-            }
+        if (paneType === 'current'){
+            // 使用默认的 obsidian://daily 协议
         } else {
             // 支持 paneType 定义打开方式
             defaultUrl += `&paneType=${paneType}`;
