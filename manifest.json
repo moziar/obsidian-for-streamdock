@@ -15,6 +15,20 @@
       ]
     },
     {
+      "UUID": "com.moz.obsidian-for-streamdock.check-in",
+      "Name": "Check In",
+      "Tooltip": "基于 Daily Note 打卡",
+      "PropertyInspectorPath": "propertyInspector/check-in.html",
+      "Icon": "images/check-box_action",
+      "States": [
+        {
+          "FontSize": "11",
+          "Title": "Check In",
+          "Image": "images/check-box"
+        }
+      ]
+    },
+    {
       "UUID": "com.moz.obsidian-for-streamdock.open-note",
       "Name": "Open Note",
       "Tooltip": "打开笔记",

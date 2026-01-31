@@ -60,6 +60,7 @@ function connected(jsn) {
         { event: 'com.moz.obsidian-for-streamdock.vault-switcher.keyDown', handler: vaultSwitcher },
         { event: 'com.moz.obsidian-for-streamdock.open-vault.keyDown', handler: openVault },
         { event: 'com.moz.obsidian-for-streamdock.daily-note.keyDown', handler: dailyNote },
+        { event: 'com.moz.obsidian-for-streamdock.check-in.keyDown', handler: checkIn },
         { event: 'com.moz.obsidian-for-streamdock.web-viewer.keyDown', handler: webViewer },
         { event: 'com.moz.obsidian-for-streamdock.web-searcher.keyDown', handler: webSearcher },
         { event: 'com.moz.obsidian-for-streamdock.note-finder.keyDown', handler: noteFinder },
@@ -359,6 +360,33 @@ function dailyNote(data) {
         defaultUrl = `obsidian://adv-uri?vault=${encodedVault}&daily=true&openmode=true`;
     }
 
+    openUrlAndShowOk(data, defaultUrl);
+}
+
+/**
+ * @param {{
+ *   context: string,
+ *   payload: {
+ *     settings: {
+ *       vault?: string,
+ *       item?: string
+ *     }
+ *   },
+ * }} data
+ */
+function checkIn(data) {
+    const vault = resolveVaultName(data);
+    const frontmatterkey = data.payload.settings.item || '';
+
+    if (!vault || !frontmatterkey) {
+        showAlert(data.context);
+        return;
+    }
+
+    const encodedVault = encodeURIComponent(vault.trim());
+    let defaultUrl = `obsidian://daily?vault=${encodedVault}`;
+
+    defaultUrl = `obsidian://adv-uri?vault=${encodedVault}&daily=true&frontmatterkey=${frontmatterkey}&data=true`;
     openUrlAndShowOk(data, defaultUrl);
 }
 
