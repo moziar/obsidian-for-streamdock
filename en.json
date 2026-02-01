@@ -6,6 +6,10 @@
     "Name": "Daily Note",
     "Tooltip": "Open Obsidian Daily Note"
   },
+  "com.moz.obsidian-for-streamdock.check-in": {
+    "Name": "Check In",
+    "Tooltip": "Check in based on daily note"
+  },
   "com.moz.obsidian-for-streamdock.open-note": {
     "Name": "Open Note",
     "Tooltip": "Open specific Obsidian Note"
