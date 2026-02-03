@@ -986,17 +986,19 @@ const SDApi = {
         setState: function (context, payload) {
             SDApi.send(context, 'setState', {
                 payload: {
-                    'state': 1 - Number(payload === 0)
+                    'state': Number(payload) || 0
                 }
             });
         },
 
-        setTitle: function (context, title, target) {
+        setTitle: function (context, title, target, state) {
+            const payload = {
+                title: '' + title || '',
+                target: target || DestinationEnum.HARDWARE_AND_SOFTWARE
+            };
+            if (!Utils.isUndefined(state)) payload.state = Number(state) || 0;
             SDApi.send(context, 'setTitle', {
-                payload: {
-                    title: '' + title || '',
-                    target: target || DestinationEnum.HARDWARE_AND_SOFTWARE
-                }
+                payload
             });
         },
 
