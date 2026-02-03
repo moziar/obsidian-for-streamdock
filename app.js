@@ -164,7 +164,6 @@ function toggleColorSchemeSync(context) {
     const nextIsDarkMode = !currentIsDarkMode;
 
     setState(context, nextIsDarkMode ? 1 : 0);
-    setTitle(context, nextIsDarkMode ? 'Dark' : 'Light');
     
     globalSettings = Object.assign({}, globalSettings, { isDarkMode: nextIsDarkMode });
 
