@@ -164,7 +164,7 @@
       "Name": "Settings Navigator",
       "Tooltip": "插件设置页导航",
       "PropertyInspectorPath": "propertyInspector/settings-navigator.html",
-      "Icon": "images/settings-navigator_action",
+      "Icon": "images/settings-navigator_action@2x",
       "States": [
         {
           "FontSize": "11",
