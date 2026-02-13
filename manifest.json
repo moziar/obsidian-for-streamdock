@@ -5,7 +5,7 @@
       "Name": "Daily Note",
       "Tooltip": "打开 Obsidian Daily Note",
       "PropertyInspectorPath": "propertyInspector/daily-note.html",
-      "Icon": "images/daily-note_action",
+      "Icon": "images/daily-note_action@2x",
       "States": [
         {
           "FontSize": "11",
@@ -19,7 +19,7 @@
       "Name": "Check In",
       "Tooltip": "基于 Daily Note 打卡",
       "PropertyInspectorPath": "propertyInspector/check-in.html",
-      "Icon": "images/check-box_action",
+      "Icon": "images/check-box_action@2x",
       "States": [
         {
           "FontSize": "11",
@@ -33,7 +33,7 @@
       "Name": "Open Note",
       "Tooltip": "打开笔记",
       "PropertyInspectorPath": "propertyInspector/open-note.html",
-      "Icon": "images/open-note_action",
+      "Icon": "images/open-note_action@2x",
       "States": [
         {
           "FontSize": "11",
@@ -46,7 +46,7 @@
       "UUID": "com.moz.obsidian-for-streamdock.vault-switcher",
       "Name": "Vault Switcher",
       "Tooltip": "打开笔记库切换面板",
-      "Icon": "images/vault-switcher_action",
+      "Icon": "images/vault-switcher_action@2x",
       "States": [
         {
           "FontSize": "11",
@@ -60,7 +60,7 @@
       "Name": "Open Vault",
       "Tooltip": "打开笔记库",
       "PropertyInspectorPath": "propertyInspector/open-vault.html",
-      "Icon": "images/open-vault_action",
+      "Icon": "images/open-vault_action@2x",
       "States": [
         {
           "FontSize": "11",
@@ -74,7 +74,7 @@
       "Name": "Note Finder",
       "Tooltip": "搜索笔记",
       "PropertyInspectorPath": "propertyInspector/note-finder.html",
-      "Icon": "images/note-finder_action",
+      "Icon": "images/note-finder_action@2x",
       "States": [
         {
           "FontSize": "11",
@@ -88,7 +88,7 @@
       "Name": "Web Viewer",
       "Tooltip": "打开 Obsidian Web Viewer",
       "PropertyInspectorPath": "propertyInspector/web-viewer.html",
-      "Icon": "images/web-viewer_action",
+      "Icon": "images/web-viewer_action@2x",
       "States": [
         {
           "FontSize": "11",
@@ -102,7 +102,7 @@
       "Name": "Web Searcher",
       "Tooltip": "打开网络搜索",
       "PropertyInspectorPath": "propertyInspector/web-searcher.html",
-      "Icon": "images/web-searcher_action",
+      "Icon": "images/web-searcher_action@2x",
       "States": [
         {
           "FontSize": "11",
@@ -116,7 +116,7 @@
       "Name": "Run Command",
       "Tooltip": "运行 Obsidian 中的命令",
       "PropertyInspectorPath": "propertyInspector/run-command.html",
-      "Icon": "images/run-command_action",
+      "Icon": "images/run-command_action@2x",
       "States": [
         {
           "FontSize": "11",
@@ -130,7 +130,7 @@
       "Name": "Toggle Color Scheme",
       "Tooltip": "切换亮色/暗色模式",
       "PropertyInspectorPath": "propertyInspector/toggle-color-scheme.html",
-      "Icon": "images/toggle-color-scheme_action",
+      "Icon": "images/toggle-color-scheme_action@2x",
       "state": 0,
       "States": [
         {
@@ -150,7 +150,7 @@
       "Name": "Load Workspace",
       "Tooltip": "加载 Workspace",
       "PropertyInspectorPath": "propertyInspector/load-workspace.html",
-      "Icon": "images/load-workspace_action",
+      "Icon": "images/load-workspace_action@2x",
       "States": [
         {
           "FontSize": "11",
@@ -164,7 +164,7 @@
       "Name": "Settings Navigator",
       "Tooltip": "插件设置页导航",
       "PropertyInspectorPath": "propertyInspector/settings-navigator.html",
-      "Icon": "images/settings-navigator_action",
+      "Icon": "images/settings-navigator_action@2x",
       "States": [
         {
           "FontSize": "11",
@@ -178,7 +178,7 @@
       "Name": "Plugin Setting",
       "Tooltip": "插件设置",
       "PropertyInspectorPath": "propertyInspector/plugin-setting.html",
-      "Icon": "images/plugin-setting_action",
+      "Icon": "images/plugin-setting_action@2x",
       "States": [
         {
           "FontSize": "11",
@@ -192,7 +192,7 @@
       "Name": "Switch Tab",
       "PropertyInspectorPath": "propertyInspector/switch-tab.html",
       "Tooltip": "切换 Obsidian 标签页",
-      "Icon": "images/switch-tab_action",
+      "Icon": "images/switch-tab_action@2x",
       "Controllers": [
         "Knob"
       ],
@@ -209,7 +209,7 @@
       "Name": "Web Zoom",
       "PropertyInspectorPath": "propertyInspector/web-zoom.html",
       "Tooltip": "Web Viewer 缩放/重置",
-      "Icon": "images/web-zoom_action",
+      "Icon": "images/web-zoom_action@2x",
       "Controllers": [
         "Knob"
       ],
@@ -226,7 +226,7 @@
       "Name": "Zoom",
       "PropertyInspectorPath": "propertyInspector/zoom.html",
       "Tooltip": "窗口缩放/重置",
-      "Icon": "images/zoom_action",
+      "Icon": "images/zoom_action@2x",
       "Controllers": [
         "Knob"
       ],
@@ -243,7 +243,7 @@
       "Name": "Note Navigator",
       "PropertyInspectorPath": "propertyInspector/note-navigator.html",
       "Tooltip": "在不同日期的笔记之间进行切换",
-      "Icon": "images/note-navigator_action",
+      "Icon": "images/note-navigator_action@2x",
       "Controllers": [
         "Knob"
       ],
@@ -262,7 +262,7 @@
   "Description": "在 StreamDock 中提供对 Obsidian 的支持",
   "Icon": "images/plugin",
   "Category": "enObsidian",
-  "CategoryIcon": "images/category",
+  "CategoryIcon": "images/category@2x",
   "URL": "https://github.com/moziar/obsidian-for-streamdock",
   "Version": "2.2.0",
   "OS": [
