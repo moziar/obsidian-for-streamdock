@@ -944,9 +944,10 @@ function onClose(ws, evt) {
 /**
  * @param {string} context
  * @param {string} title
+ * @param {number=} state
  */
-function setTitle(context, title) {
-    $SD.api.setTitle(context, title);
+function setTitle(context, title, state) {
+    $SD.api.setTitle(context, title, undefined, state);
 }
 
 /**
