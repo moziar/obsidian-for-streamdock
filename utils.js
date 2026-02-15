@@ -44,6 +44,33 @@ function openUrlAndShowOk(data, url) {
     showOk(data.context);
 }
 
+// 实现通用的更新 PI state 的方法
+/**
+ * @param {{
+ *   context: string,
+ *   payload: {
+ *     settings: {
+ *       type?: string|null,
+ *     }
+ *   },
+ * }} data
+ * @param {object} constOptions
+ */
+function updatePropertyInspectorState(data, constOptions) {
+    const key = data.payload.settings.type || constOptions[0];
+
+    // 获取常量的所有值
+    const optionsValues = Object.values(constOptions);
+
+    // 查找 key 在数组中的索引位置
+    const foundIndex = optionsValues.findIndex( value => value === key) || 0;
+
+    // 如果没找到，使用默认值 0
+    const stateIndex = foundIndex === -1 ? 0 : foundIndex;
+
+    setState(data.context, stateIndex);
+}
+
 /**
  * 通用的简单命令执行函数
  * @param {{
