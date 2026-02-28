@@ -61,6 +61,7 @@ function connected(jsn) {
         { event: 'com.moz.obsidian-for-streamdock.open-vault.keyDown', handler: openVault },
         { event: 'com.moz.obsidian-for-streamdock.daily-note.keyDown', handler: dailyNote },
         { event: 'com.moz.obsidian-for-streamdock.check-in.keyDown', handler: checkIn },
+        { event: 'com.moz.obsidian-for-streamdock.unique-note.keyDown', handler: uniqueNote},
         { event: 'com.moz.obsidian-for-streamdock.web-viewer.keyDown', handler: webViewer },
         { event: 'com.moz.obsidian-for-streamdock.web-searcher.keyDown', handler: webSearcher },
         { event: 'com.moz.obsidian-for-streamdock.note-finder.keyDown', handler: noteFinder },
@@ -354,6 +355,40 @@ function checkIn(data) {
     let defaultUrl = `obsidian://daily?vault=${encodedVault}`;
 
     defaultUrl = `obsidian://adv-uri?vault=${encodedVault}&daily=true&frontmatterkey=${frontmatterkey}&data=true`;
+    openUrlAndShowOk(data, defaultUrl);
+}
+
+/**
+ * @param {{
+ *   context: string,
+ *   payload: {
+ *     settings: {
+ *       vault?: string,
+ *       pane_type?: string
+ *     }
+ *   },
+ * }} data
+ */
+function uniqueNote(data) {
+    const vault = resolveVaultName(data) || '';
+    const paneType = data.payload.settings.pane_type || 'current';
+
+    if (!vault) {
+        showAlert(data.context);
+        return;
+    }
+
+    const encodedVault = encodeURIComponent(vault.trim());
+    let defaultUrl = `obsidian://unique?vault=${encodedVault}`;
+
+    // 直接使用布尔值检查
+    if (paneType === 'current'){
+        // 使用默认的 obsidian://unique 协议
+    } else {
+        // 支持 paneType 定义打开方式
+        defaultUrl += `&paneType=${paneType}`;
+    }
+
     openUrlAndShowOk(data, defaultUrl);
 }
 

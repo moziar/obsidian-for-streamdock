@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,minimal-ui,viewport-fit=cover"
+          name=viewport>
+    <meta content=yes name=apple-mobile-web-app-capable>
+    <meta content=black name=apple-mobile-web-app-status-bar-style>
+    <title>com.moz.obsidian-for-streamdock.unique-note</title>
+    <link href="css/pi.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="sdpi-wrapper">
+    <div class="sdpi-item">
+        <div class="sdpi-item-label" data-localize="Vault-ID">Vault ID</div>
+        <select class="sdpi-item-value select" id="vault_id">
+            <option selected value="Vault1">Vault 1</option>
+            <option value="Vault2">Vault 2</option>
+            <option value="Vault3">Vault 3</option>
+            <option value="Vault4">Vault 4</option>
+            <option value="Vault5">Vault 5</option>
+        </select>
+    </div>
+
+    <div class="sdpi-item">
+        <div class="sdpi-item-label" data-localize="Vault-ID">Pane Type</div>
+        <select class="sdpi-item-value select" id="pane_type">
+            <option selected value="current">Current Tab</option>
+            <option value="tab">New Tab</option>
+            <option value="split">Split View</option>
+            <option value="window">New Window</option>
+        </select>
+    </div>
+
+    <details>
+        <summary>Legacy Setting</summary>
+        <div class="sdpi-item" title="Enter the vault name" type="textarea">
+            <div class="sdpi-item-label" data-localize="Vault Name">Vault</div>
+            <input class="sdpi-item-value" id="vault" required type="text" value="">
+        </div>
+    </details>
+</div>
+
+<div class="sdpi-info-label hidden" style="top: -1000;" value=""></div>
+
+<script src="js/common.js"></script>
+<script src="js/common_pi.js"></script>
+<script src="js/index_pi.js"></script>
+<script src="js/global_settings_pi.js"></script>
+</body>
+
+</html>
