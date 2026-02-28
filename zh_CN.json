@@ -10,6 +10,10 @@
     "Name": "Check In",
     "Tooltip": "基于 Daily Note 打卡"
   },
+  "com.moz.obsidian-for-streamdock.unique-note": {
+    "Name": "Unique Note",
+    "Tooltip": "新建 Unique Note"
+  },
   "com.moz.obsidian-for-streamdock.open-note": {
     "Name": "Open Note",
     "Tooltip": "打开笔记"
