@@ -42,12 +42,15 @@ A StreamDock plugin which could help you open notes, run obsidian commands, sear
 
 > [!TIP]
 >
-> You could get the `API Key` from local-REST-API setting page.
+> - You could get the `API Key` from local-REST-API setting page.
+> - For enObsidian v2.x, see [README_v2.md](docs/README_v2.md).
 
-### Plugin Setting (v3)
 
-1. Add a **Plugin Setting** action, select a Vault ID, then fill in **Vault Name / API Key / Port / HTTPS** and click **Save**.
-2. In other actions, select the same **Vault ID** to reuse those values.
+
+### Plugin Setting
+
+1. Add a **Plugin Setting** action, select a Vault ID, then fill in `Vault Name / API Key / Port / HTTPS` and click **Save**.
+2. In other actions, select the same `Vault ID` to reuse those values.
 3. Most actions no longer require entering Vault Name directly; it is resolved from the selected Vault ID.
 
 
@@ -56,15 +59,29 @@ A StreamDock plugin which could help you open notes, run obsidian commands, sear
 
 #### Open Daily Note
 
-1. Only the API Key is needed.
-2. Will open your daily note directly even if obsidian did not open.
-3. With `Auto Mode` enabled, the plugin opens the daily note in a new pane and focuses on it if it's already open.
+1. The action will open your daily note directly even if obsidian did not open.
+2. With `Auto Mode` enabled, the plugin opens the daily note in a new pane and focuses it if it is already open.
+
+
+
+#### Check In
+
+1. Enter the property name that you want to check.
+2. The action will set the property to `True`.
+3. This can be useful for habit check.
+
+
+
+#### Unique Note
+
+1. Enable the *Unique note creator* core plugin.
+2. Select where to open the note via `Pane Type`.
+3. This action requires obsidian `v1.13.3`.
 
 
 
 #### Open Note
 
-1. Enter your Vault name.
 2. Enter the unique note name, or note relative path to `Note Path`, the plugin will auto encode it.
 3. Files that aren't in `.md` format must have an extension.
 4. Support open note when the obsidian did not open.
@@ -74,9 +91,15 @@ A StreamDock plugin which could help you open notes, run obsidian commands, sear
 
 
 
+#### Vault Switcher
+
+1. The action will open the Obsidian vault switcher window.
+
+
+
 #### Open Vault
 
-1. Enter the Vault you want to open.
+1. Select the Vault you want to open.
 2. This is helpful when you have multiple vaults.
 3. Support cold launch.
 
@@ -84,22 +107,19 @@ A StreamDock plugin which could help you open notes, run obsidian commands, sear
 
 #### Note Finder
 
-1. Enter your Vault name.
-2. Choose the type you want to search (`all`, `tag`, `task`, `file`, `path`, `property`). If you select `task`, you can also specify a task status to match.
-3. Enter the search query, or provide a  property name and value if you've selected  `property`. Note that hashtag(`#`) is not required for tag searches.
+1. Choose the type you want to search (`all`, `tag`, `task`, `file`, `path`, `property`). If you select `task`, you can also specify a task status to match.
+2. Enter the search query, or provide a  property name and value if you've selected  `property`. Note that hashtag(`#`) is not required for tag searches.
 
  
 
 #### Web Viewer
 
-1. Only the API Key is needed.
-2. This function requires Obsidian version `v1.8` or later. Additionally, you need to enable the *Web Viewer* plugin in the Obsidian settings.
+1. This function requires Obsidian version `v1.8` or later. Additionally, you need to enable the *Web Viewer* plugin in the Obsidian settings.
 
 
 
 #### Web Searcher
 
-1. Only the API Key is needed.
 2. This function requires Obsidian version `v1.8` or later. Additionally, you need to enable the *Web Viewer* plugin in the Obsidian settings.
 3. Recommend using AI search engines like `https://metaso.cn/?q=%s`.
 
@@ -107,22 +127,29 @@ A StreamDock plugin which could help you open notes, run obsidian commands, sear
 
 #### Run Command
 
-1. Enter the API Key.
-2. Enter the Command ID. You can get the ID from [Local REST API for Obsidian](https://coddingtonbear.github.io/obsidian-local-rest-api/#/).
+1. Enter the Command ID. You can get the ID from [Local REST API for Obsidian](https://coddingtonbear.github.io/obsidian-local-rest-api/#/).
 
    > See [showcase](Showcase.md#command) for inspiration.
 
+
+
+#### Toggle Color Scheme
+
+1. Toggle Obsidian's color scheme between `Light` and `Dark`.
+2. The action icon and title will auto change to fit the current color scheme.
+3. Use the `Switch` button if you find the color scheme not match.
+
+
+
 #### Load Workspace
 
-1. Only the vault name is needed.
-2. This is useful when you have multiple workspace.
-3. This function requires  *Obsidian Advanced URI plugin*, install it before use.
+1. This is useful when you have multiple workspace.
+2. This function requires  *Obsidian Advanced URI plugin*, install it before use.
 
 
 
 #### Settings Navigator
 
-1. Enter your Vault name.
 2. Enter the plugin ID. You could get it from [community plugin list](https://github.com/obsidianmd/obsidian-releases/blob/master/community-plugins.json).
 3. You could use this function to open community plugins setting quickly.
 4. This function requires  *Obsidian Advanced URI plugin*, install it before use.
@@ -135,21 +162,18 @@ A StreamDock plugin which could help you open notes, run obsidian commands, sear
 
 #### Switch Tab
 
-1. Only the API Key is needed.
 2. Use the dial to switch between tabs.
 
 
 
 #### Web Zoom
 
-1. Only the API Key is needed.
 2. Use the dial to zoom in, zoom out or reset zoom in Web Viewer.
 
 
 
 #### Zoom
 
-1. Only the API Key is needed.
 2. Use the dial to zoom in, zoom out or reset zoom.
 
 
@@ -157,7 +181,6 @@ A StreamDock plugin which could help you open notes, run obsidian commands, sear
 #### Note Navigator
 
 1. Select the note type to navigate (Daily/Weekly), the title will automatically updates based on it.
-2. Enter the API Key.
 3. Use the dial to navigate through daily and weekly notes by date.
 4. This function relies on the Obsidian plugin *Periodic Notes* for navigation. Make sure to install and enable it.
 

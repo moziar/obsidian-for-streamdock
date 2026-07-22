@@ -29,6 +29,20 @@
       ]
     },
     {
+      "UUID": "com.moz.obsidian-for-streamdock.unique-note",
+      "Name": "Unique Note",
+      "Tooltip": "新建 Unique Note",
+      "PropertyInspectorPath": "propertyInspector/unique-note.html",
+      "Icon": "images/unique-note_action@2x",
+      "States": [
+        {
+          "FontSize": "11",
+          "Title": "Unique",
+          "Image": "images/unique-note"
+        }
+      ]
+    },
+    {
       "UUID": "com.moz.obsidian-for-streamdock.open-note",
       "Name": "Open Note",
       "Tooltip": "打开笔记",
@@ -264,7 +278,7 @@
   "Category": "enObsidian",
   "CategoryIcon": "images/category@2x",
   "URL": "https://github.com/moziar/obsidian-for-streamdock",
-  "Version": "2.2.0",
+  "Version": "3.0.0.a5",
   "OS": [
     {
         "Platform": "mac",
